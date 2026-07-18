@@ -12314,5 +12314,1196 @@ window.DASHBOARD_DATA = {
       "escalated": 0,
       "snippet": "I received an American Express gift card from my employer on Tuesday / /23 at worth {$100.00}. I tried using it at and it was declined. Tried again and it was declined. The total amount I was trying to purchase was {$52.00}. The card has {$\u2026"
     }
-  ]
+  ],
+  "alerts": {
+    "as_of": "2026-06",
+    "counts": {
+      "critical": 2,
+      "serious": 3,
+      "warning": 2
+    },
+    "attention": [],
+    "anomalies": [
+      {
+        "severity": "critical",
+        "metric": "Complaint volume",
+        "ym": "2020-04",
+        "value": 352,
+        "z": 10.37,
+        "detail": "Complaint volume hit 352 in 2020-04 (10.4\u03c3)."
+      },
+      {
+        "severity": "critical",
+        "metric": "Complaint volume",
+        "ym": "2016-08",
+        "value": 317,
+        "z": 8.31,
+        "detail": "Complaint volume hit 317 in 2016-08 (8.3\u03c3)."
+      },
+      {
+        "severity": "critical",
+        "metric": "Complaint volume",
+        "ym": "2018-10",
+        "value": 354,
+        "z": 7.79,
+        "detail": "Complaint volume hit 354 in 2018-10 (7.8\u03c3)."
+      },
+      {
+        "severity": "critical",
+        "metric": "Churn-risk share",
+        "ym": "2021-06",
+        "value": 0.0897,
+        "z": 5.4,
+        "detail": "Churn-risk share hit 9.0% in 2021-06 (5.4\u03c3)."
+      },
+      {
+        "severity": "serious",
+        "metric": "Churn-risk share",
+        "ym": "2021-07",
+        "value": 0.0709,
+        "z": 4.05,
+        "detail": "Churn-risk share hit 7.1% in 2021-07 (4.1\u03c3)."
+      }
+    ],
+    "hotspots": [
+      {
+        "severity": "critical",
+        "kind": "issue",
+        "name": "Problem with a purchase or transfer",
+        "metric": "churn-risk",
+        "rate": 0.224,
+        "baseline": 0.0192,
+        "lift": 11.65,
+        "n": 1067,
+        "detail": "Problem with a purchase or transfer \u2014 churn-risk 22% (11.7\u00d7 the 2% Amex average, n=1,067)."
+      },
+      {
+        "severity": "critical",
+        "kind": "issue",
+        "name": "Trouble using the card",
+        "metric": "escalation",
+        "rate": 0.6006,
+        "baseline": 0.29,
+        "lift": 2.07,
+        "n": 4399,
+        "detail": "Trouble using the card \u2014 escalation 60% (2.1\u00d7 the 29% Amex average, n=4,399)."
+      },
+      {
+        "severity": "serious",
+        "kind": "product",
+        "name": "Prepaid card",
+        "metric": "escalation",
+        "rate": 0.565,
+        "baseline": 0.29,
+        "lift": 1.95,
+        "n": 4972,
+        "detail": "Prepaid card \u2014 escalation 56% (1.9\u00d7 the 29% Amex average, n=4,972)."
+      },
+      {
+        "severity": "serious",
+        "kind": "issue",
+        "name": "Problem getting a card or closing an account",
+        "metric": "escalation",
+        "rate": 0.5416,
+        "baseline": 0.29,
+        "lift": 1.87,
+        "n": 469,
+        "detail": "Problem getting a card or closing an account \u2014 escalation 54% (1.9\u00d7 the 29% Amex average, n=469)."
+      },
+      {
+        "severity": "serious",
+        "kind": "issue",
+        "name": "Threatened to contact someone or share information improperly",
+        "metric": "escalation",
+        "rate": 0.5251,
+        "baseline": 0.29,
+        "lift": 1.81,
+        "n": 179,
+        "detail": "Threatened to contact someone or share infor \u2014 escalation 53% (1.8\u00d7 the 29% Amex average, n=179)."
+      },
+      {
+        "severity": "warning",
+        "kind": "issue",
+        "name": "Communication tactics",
+        "metric": "escalation",
+        "rate": 0.4793,
+        "baseline": 0.29,
+        "lift": 1.65,
+        "n": 605,
+        "detail": "Communication tactics \u2014 escalation 48% (1.7\u00d7 the 29% Amex average, n=605)."
+      },
+      {
+        "severity": "warning",
+        "kind": "issue",
+        "name": "Late fee",
+        "metric": "escalation",
+        "rate": 0.455,
+        "baseline": 0.29,
+        "lift": 1.57,
+        "n": 200,
+        "detail": "Late fee \u2014 escalation 46% (1.6\u00d7 the 29% Amex average, n=200)."
+      }
+    ],
+    "timeline": {
+      "metric": "Churn-risk share",
+      "points": [
+        {
+          "ym": "2011-12",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2012-01",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2012-02",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2012-03",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2012-04",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2012-05",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2012-06",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2012-07",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2012-08",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2012-09",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2012-10",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2012-11",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2012-12",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2013-01",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2013-02",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2013-03",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2013-04",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2013-05",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2013-06",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2013-07",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2013-08",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2013-09",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2013-10",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2013-11",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2013-12",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2014-01",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2014-02",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2014-03",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2014-04",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2014-05",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2014-06",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2014-07",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2014-08",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2014-09",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2014-10",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2014-11",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2014-12",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2015-01",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2015-02",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2015-03",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2015-04",
+          "value": 0.0231,
+          "z": 0.62,
+          "flag": false
+        },
+        {
+          "ym": "2015-05",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2015-06",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2015-07",
+          "value": 0.0063,
+          "z": -0.58,
+          "flag": false
+        },
+        {
+          "ym": "2015-08",
+          "value": 0.0137,
+          "z": -0.05,
+          "flag": false
+        },
+        {
+          "ym": "2015-09",
+          "value": 0.0123,
+          "z": -0.15,
+          "flag": false
+        },
+        {
+          "ym": "2015-10",
+          "value": 0.0373,
+          "z": 1.64,
+          "flag": false
+        },
+        {
+          "ym": "2015-11",
+          "value": 0.0065,
+          "z": -0.57,
+          "flag": false
+        },
+        {
+          "ym": "2015-12",
+          "value": 0.0482,
+          "z": 2.43,
+          "flag": false
+        },
+        {
+          "ym": "2016-01",
+          "value": 0.0144,
+          "z": 0.0,
+          "flag": false
+        },
+        {
+          "ym": "2016-02",
+          "value": 0.0062,
+          "z": -0.59,
+          "flag": false
+        },
+        {
+          "ym": "2016-03",
+          "value": 0.0176,
+          "z": 0.23,
+          "flag": false
+        },
+        {
+          "ym": "2016-04",
+          "value": 0.0244,
+          "z": 0.72,
+          "flag": false
+        },
+        {
+          "ym": "2016-05",
+          "value": 0.0225,
+          "z": 0.58,
+          "flag": false
+        },
+        {
+          "ym": "2016-06",
+          "value": 0.011,
+          "z": -0.24,
+          "flag": false
+        },
+        {
+          "ym": "2016-07",
+          "value": 0.0306,
+          "z": 1.16,
+          "flag": false
+        },
+        {
+          "ym": "2016-08",
+          "value": 0.0032,
+          "z": -0.8,
+          "flag": false
+        },
+        {
+          "ym": "2016-09",
+          "value": 0.0138,
+          "z": -0.04,
+          "flag": false
+        },
+        {
+          "ym": "2016-10",
+          "value": 0.0202,
+          "z": 0.42,
+          "flag": false
+        },
+        {
+          "ym": "2016-11",
+          "value": 0.0056,
+          "z": -0.63,
+          "flag": false
+        },
+        {
+          "ym": "2016-12",
+          "value": 0.0098,
+          "z": -0.33,
+          "flag": false
+        },
+        {
+          "ym": "2017-01",
+          "value": 0.0296,
+          "z": 1.09,
+          "flag": false
+        },
+        {
+          "ym": "2017-02",
+          "value": 0.0103,
+          "z": -0.29,
+          "flag": false
+        },
+        {
+          "ym": "2017-03",
+          "value": 0.0143,
+          "z": -0.01,
+          "flag": false
+        },
+        {
+          "ym": "2017-04",
+          "value": 0.0117,
+          "z": -0.19,
+          "flag": false
+        },
+        {
+          "ym": "2017-05",
+          "value": 0.0417,
+          "z": 1.96,
+          "flag": false
+        },
+        {
+          "ym": "2017-06",
+          "value": 0.0174,
+          "z": 0.22,
+          "flag": false
+        },
+        {
+          "ym": "2017-07",
+          "value": 0.0213,
+          "z": 0.5,
+          "flag": false
+        },
+        {
+          "ym": "2017-08",
+          "value": 0.0054,
+          "z": -0.65,
+          "flag": false
+        },
+        {
+          "ym": "2017-09",
+          "value": 0.0311,
+          "z": 1.2,
+          "flag": false
+        },
+        {
+          "ym": "2017-10",
+          "value": 0.0135,
+          "z": -0.06,
+          "flag": false
+        },
+        {
+          "ym": "2017-11",
+          "value": 0.0312,
+          "z": 1.21,
+          "flag": false
+        },
+        {
+          "ym": "2017-12",
+          "value": 0.0242,
+          "z": 0.7,
+          "flag": false
+        },
+        {
+          "ym": "2018-01",
+          "value": 0.0171,
+          "z": 0.19,
+          "flag": false
+        },
+        {
+          "ym": "2018-02",
+          "value": 0.0088,
+          "z": -0.4,
+          "flag": false
+        },
+        {
+          "ym": "2018-03",
+          "value": 0.032,
+          "z": 1.26,
+          "flag": false
+        },
+        {
+          "ym": "2018-04",
+          "value": 0.0354,
+          "z": 1.51,
+          "flag": false
+        },
+        {
+          "ym": "2018-05",
+          "value": 0.0464,
+          "z": 2.3,
+          "flag": false
+        },
+        {
+          "ym": "2018-06",
+          "value": 0.04,
+          "z": 1.84,
+          "flag": false
+        },
+        {
+          "ym": "2018-07",
+          "value": 0.0377,
+          "z": 1.67,
+          "flag": false
+        },
+        {
+          "ym": "2018-08",
+          "value": 0.0128,
+          "z": -0.11,
+          "flag": false
+        },
+        {
+          "ym": "2018-09",
+          "value": 0.0152,
+          "z": 0.06,
+          "flag": false
+        },
+        {
+          "ym": "2018-10",
+          "value": 0.0282,
+          "z": 0.99,
+          "flag": false
+        },
+        {
+          "ym": "2018-11",
+          "value": 0.0237,
+          "z": 0.67,
+          "flag": false
+        },
+        {
+          "ym": "2018-12",
+          "value": 0.0259,
+          "z": 0.83,
+          "flag": false
+        },
+        {
+          "ym": "2019-01",
+          "value": 0.0083,
+          "z": -0.44,
+          "flag": false
+        },
+        {
+          "ym": "2019-02",
+          "value": 0.0175,
+          "z": 0.22,
+          "flag": false
+        },
+        {
+          "ym": "2019-03",
+          "value": 0.0152,
+          "z": 0.06,
+          "flag": false
+        },
+        {
+          "ym": "2019-04",
+          "value": 0.0265,
+          "z": 0.87,
+          "flag": false
+        },
+        {
+          "ym": "2019-05",
+          "value": 0.0395,
+          "z": 1.8,
+          "flag": false
+        },
+        {
+          "ym": "2019-06",
+          "value": 0.0565,
+          "z": 3.02,
+          "flag": false
+        },
+        {
+          "ym": "2019-07",
+          "value": 0.021,
+          "z": 0.47,
+          "flag": false
+        },
+        {
+          "ym": "2019-08",
+          "value": 0.0268,
+          "z": 0.89,
+          "flag": false
+        },
+        {
+          "ym": "2019-09",
+          "value": 0.0563,
+          "z": 3.01,
+          "flag": false
+        },
+        {
+          "ym": "2019-10",
+          "value": 0.0223,
+          "z": 0.57,
+          "flag": false
+        },
+        {
+          "ym": "2019-11",
+          "value": 0.0096,
+          "z": -0.34,
+          "flag": false
+        },
+        {
+          "ym": "2019-12",
+          "value": 0.009,
+          "z": -0.39,
+          "flag": false
+        },
+        {
+          "ym": "2020-01",
+          "value": 0.0219,
+          "z": 0.54,
+          "flag": false
+        },
+        {
+          "ym": "2020-02",
+          "value": 0.0098,
+          "z": -0.33,
+          "flag": false
+        },
+        {
+          "ym": "2020-03",
+          "value": 0.0159,
+          "z": 0.11,
+          "flag": false
+        },
+        {
+          "ym": "2020-04",
+          "value": 0.0199,
+          "z": 0.39,
+          "flag": false
+        },
+        {
+          "ym": "2020-05",
+          "value": 0.0276,
+          "z": 0.95,
+          "flag": false
+        },
+        {
+          "ym": "2020-06",
+          "value": 0.0285,
+          "z": 1.01,
+          "flag": false
+        },
+        {
+          "ym": "2020-07",
+          "value": 0.0144,
+          "z": 0.0,
+          "flag": false
+        },
+        {
+          "ym": "2020-08",
+          "value": 0.0378,
+          "z": 1.68,
+          "flag": false
+        },
+        {
+          "ym": "2020-09",
+          "value": 0.0472,
+          "z": 2.35,
+          "flag": false
+        },
+        {
+          "ym": "2020-10",
+          "value": 0.0215,
+          "z": 0.51,
+          "flag": false
+        },
+        {
+          "ym": "2020-11",
+          "value": 0.0321,
+          "z": 1.27,
+          "flag": false
+        },
+        {
+          "ym": "2020-12",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2021-01",
+          "value": 0.0113,
+          "z": -0.22,
+          "flag": false
+        },
+        {
+          "ym": "2021-02",
+          "value": 0.0403,
+          "z": 1.86,
+          "flag": false
+        },
+        {
+          "ym": "2021-03",
+          "value": 0.0235,
+          "z": 0.65,
+          "flag": false
+        },
+        {
+          "ym": "2021-04",
+          "value": 0.0112,
+          "z": -0.23,
+          "flag": false
+        },
+        {
+          "ym": "2021-05",
+          "value": 0.0173,
+          "z": 0.21,
+          "flag": false
+        },
+        {
+          "ym": "2021-06",
+          "value": 0.0897,
+          "z": 5.4,
+          "flag": true
+        },
+        {
+          "ym": "2021-07",
+          "value": 0.0709,
+          "z": 4.05,
+          "flag": true
+        },
+        {
+          "ym": "2021-08",
+          "value": 0.0225,
+          "z": 0.58,
+          "flag": false
+        },
+        {
+          "ym": "2021-09",
+          "value": 0.0114,
+          "z": -0.22,
+          "flag": false
+        },
+        {
+          "ym": "2021-10",
+          "value": 0.0198,
+          "z": 0.39,
+          "flag": false
+        },
+        {
+          "ym": "2021-11",
+          "value": 0.0256,
+          "z": 0.8,
+          "flag": false
+        },
+        {
+          "ym": "2021-12",
+          "value": 0.011,
+          "z": -0.24,
+          "flag": false
+        },
+        {
+          "ym": "2022-01",
+          "value": 0.0127,
+          "z": -0.12,
+          "flag": false
+        },
+        {
+          "ym": "2022-02",
+          "value": 0.0117,
+          "z": -0.19,
+          "flag": false
+        },
+        {
+          "ym": "2022-03",
+          "value": 0.0237,
+          "z": 0.67,
+          "flag": false
+        },
+        {
+          "ym": "2022-04",
+          "value": 0.0173,
+          "z": 0.21,
+          "flag": false
+        },
+        {
+          "ym": "2022-05",
+          "value": 0.0193,
+          "z": 0.35,
+          "flag": false
+        },
+        {
+          "ym": "2022-06",
+          "value": 0.026,
+          "z": 0.83,
+          "flag": false
+        },
+        {
+          "ym": "2022-07",
+          "value": 0.0229,
+          "z": 0.61,
+          "flag": false
+        },
+        {
+          "ym": "2022-08",
+          "value": 0.0082,
+          "z": -0.44,
+          "flag": false
+        },
+        {
+          "ym": "2022-09",
+          "value": 0.0062,
+          "z": -0.59,
+          "flag": false
+        },
+        {
+          "ym": "2022-10",
+          "value": 0.0297,
+          "z": 1.1,
+          "flag": false
+        },
+        {
+          "ym": "2022-11",
+          "value": 0.0129,
+          "z": -0.11,
+          "flag": false
+        },
+        {
+          "ym": "2022-12",
+          "value": 0.0245,
+          "z": 0.72,
+          "flag": false
+        },
+        {
+          "ym": "2023-01",
+          "value": 0.0144,
+          "z": 0.0,
+          "flag": false
+        },
+        {
+          "ym": "2023-02",
+          "value": 0.0344,
+          "z": 1.44,
+          "flag": false
+        },
+        {
+          "ym": "2023-03",
+          "value": 0.0167,
+          "z": 0.17,
+          "flag": false
+        },
+        {
+          "ym": "2023-04",
+          "value": 0.0163,
+          "z": 0.14,
+          "flag": false
+        },
+        {
+          "ym": "2023-05",
+          "value": 0.0108,
+          "z": -0.26,
+          "flag": false
+        },
+        {
+          "ym": "2023-06",
+          "value": 0.0154,
+          "z": 0.07,
+          "flag": false
+        },
+        {
+          "ym": "2023-07",
+          "value": 0.013,
+          "z": -0.1,
+          "flag": false
+        },
+        {
+          "ym": "2023-08",
+          "value": 0.0187,
+          "z": 0.31,
+          "flag": false
+        },
+        {
+          "ym": "2023-09",
+          "value": 0.0234,
+          "z": 0.65,
+          "flag": false
+        },
+        {
+          "ym": "2023-10",
+          "value": 0.0253,
+          "z": 0.78,
+          "flag": false
+        },
+        {
+          "ym": "2023-11",
+          "value": 0.0195,
+          "z": 0.37,
+          "flag": false
+        },
+        {
+          "ym": "2023-12",
+          "value": 0.0114,
+          "z": -0.22,
+          "flag": false
+        },
+        {
+          "ym": "2024-01",
+          "value": 0.0087,
+          "z": -0.41,
+          "flag": false
+        },
+        {
+          "ym": "2024-02",
+          "value": 0.0137,
+          "z": -0.05,
+          "flag": false
+        },
+        {
+          "ym": "2024-03",
+          "value": 0.0198,
+          "z": 0.39,
+          "flag": false
+        },
+        {
+          "ym": "2024-04",
+          "value": 0.0147,
+          "z": 0.02,
+          "flag": false
+        },
+        {
+          "ym": "2024-05",
+          "value": 0.015,
+          "z": 0.04,
+          "flag": false
+        },
+        {
+          "ym": "2024-06",
+          "value": 0.0172,
+          "z": 0.2,
+          "flag": false
+        },
+        {
+          "ym": "2024-07",
+          "value": 0.0134,
+          "z": -0.07,
+          "flag": false
+        },
+        {
+          "ym": "2024-08",
+          "value": 0.0141,
+          "z": -0.02,
+          "flag": false
+        },
+        {
+          "ym": "2024-09",
+          "value": 0.0134,
+          "z": -0.07,
+          "flag": false
+        },
+        {
+          "ym": "2024-10",
+          "value": 0.0247,
+          "z": 0.74,
+          "flag": false
+        },
+        {
+          "ym": "2024-11",
+          "value": 0.0137,
+          "z": -0.05,
+          "flag": false
+        },
+        {
+          "ym": "2024-12",
+          "value": 0.0192,
+          "z": 0.34,
+          "flag": false
+        },
+        {
+          "ym": "2025-01",
+          "value": 0.0396,
+          "z": 1.81,
+          "flag": false
+        },
+        {
+          "ym": "2025-02",
+          "value": 0.0349,
+          "z": 1.47,
+          "flag": false
+        },
+        {
+          "ym": "2025-03",
+          "value": 0.0239,
+          "z": 0.68,
+          "flag": false
+        },
+        {
+          "ym": "2025-04",
+          "value": 0.0226,
+          "z": 0.59,
+          "flag": false
+        },
+        {
+          "ym": "2025-05",
+          "value": 0.0236,
+          "z": 0.66,
+          "flag": false
+        },
+        {
+          "ym": "2025-06",
+          "value": 0.0332,
+          "z": 1.35,
+          "flag": false
+        },
+        {
+          "ym": "2025-07",
+          "value": 0.0186,
+          "z": 0.3,
+          "flag": false
+        },
+        {
+          "ym": "2025-08",
+          "value": 0.0209,
+          "z": 0.47,
+          "flag": false
+        },
+        {
+          "ym": "2025-09",
+          "value": 0.0234,
+          "z": 0.65,
+          "flag": false
+        },
+        {
+          "ym": "2025-10",
+          "value": 0.0195,
+          "z": 0.37,
+          "flag": false
+        },
+        {
+          "ym": "2025-11",
+          "value": 0.0203,
+          "z": 0.42,
+          "flag": false
+        },
+        {
+          "ym": "2025-12",
+          "value": 0.0123,
+          "z": -0.15,
+          "flag": false
+        },
+        {
+          "ym": "2026-01",
+          "value": 0.0164,
+          "z": 0.14,
+          "flag": false
+        },
+        {
+          "ym": "2026-02",
+          "value": 0.0139,
+          "z": -0.04,
+          "flag": false
+        },
+        {
+          "ym": "2026-03",
+          "value": 0.0282,
+          "z": 0.99,
+          "flag": false
+        },
+        {
+          "ym": "2026-04",
+          "value": 0.0314,
+          "z": 1.22,
+          "flag": false
+        },
+        {
+          "ym": "2026-05",
+          "value": 0.0126,
+          "z": -0.13,
+          "flag": false
+        },
+        {
+          "ym": "2026-06",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        },
+        {
+          "ym": "2026-07",
+          "value": 0.0,
+          "z": -1.03,
+          "flag": false
+        }
+      ]
+    }
+  }
 };

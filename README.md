@@ -22,6 +22,11 @@ parallel Power BI model) and a BigQuery-ready data layer.
 
 - **Overview** — KPI cards, monthly volume + risk trends, product/issue/state
   breakdowns, response mix, and the industry benchmark.
+- **Alerts & anomalies** — auto-detected from the complaint time-series (robust
+  median/MAD z-scores; trailing baseline for volume, global for rates) and risk
+  segments: a "needs attention" read on the latest complete month, product/issue
+  risk hotspots (escalation/churn vs. the Amex average), notable historical
+  spikes, and an anomaly timeline. A tab badge shows the open critical/serious count.
 - **Complaint Explorer** — searchable, sortable, filterable table of the
   highest-risk individual complaints (escalation %, churn-risk, sentiment); click
   a row to read the narrative or send it straight to the scorer.
@@ -29,6 +34,9 @@ parallel Power BI model) and a BigQuery-ready data layer.
   and VADER sentiment computed **entirely in the browser** from the exact trained
   models (the JS port is validated to 0.00000 deviation vs. the Python pipeline —
   see `scripts/validate_scorer.py`), including the words driving the prediction.
+
+The dashboard is fully **responsive** (scrollable tabs, fluid grids, touch-sized
+targets) and theme-aware (light/dark).
 
 ### Agentic (self-updating) mode
 

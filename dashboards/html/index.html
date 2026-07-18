@@ -114,6 +114,24 @@
     padding:9px 15px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px}
   .tab:hover{color:var(--ink)}
   .tab.active{color:var(--brand); border-bottom-color:var(--brand)}
+  .tab-badge{display:inline-block; min-width:17px; height:17px; line-height:17px; padding:0 5px;
+    border-radius:9px; background:var(--crit); color:#fff; font-size:10.5px; font-weight:700; text-align:center; margin-left:3px}
+
+  /* alerts */
+  .alert-summary{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-bottom:16px}
+  .sev-counts{display:flex; gap:8px; flex-wrap:wrap}
+  .sev-count{font-size:12px; font-weight:600; color:var(--ink); padding:5px 11px; border-radius:20px;
+    border:1px solid color-mix(in srgb, var(--sc) 40%, var(--border)); background:color-mix(in srgb, var(--sc) 9%, transparent)}
+  .alert-list{display:flex; flex-direction:column; gap:10px}
+  .alert{border:1px solid var(--border); border-left:3px solid var(--sc); border-radius:9px;
+    padding:11px 13px; background:var(--surface-2)}
+  .alert-top{display:flex; align-items:center; gap:8px; margin-bottom:4px}
+  .sev{font-size:11px; font-weight:700; color:var(--sc); letter-spacing:.2px}
+  .acap{font-size:11px; color:var(--muted); text-transform:capitalize}
+  .alert-title{font-size:13.5px; font-weight:640; color:var(--ink)}
+  .alert-detail{font-size:12.5px; color:var(--ink-2); margin-top:2px; line-height:1.5}
+  .allclear{padding:16px; border:1px dashed color-mix(in srgb,var(--good) 45%,var(--border));
+    border-radius:10px; background:color-mix(in srgb,var(--good) 7%,transparent); color:var(--ink-2); font-size:13px}
 
   /* explorer */
   .filters{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:6px 0 12px}
@@ -155,6 +173,38 @@
   .term.up{border-color:color-mix(in srgb,var(--crit) 45%,var(--border)); color:var(--ink)}
   .term.down{border-color:color-mix(in srgb,var(--good) 45%,var(--border)); color:var(--ink)}
 
+  /* mobile */
+  @media(max-width:640px){
+    .wrap{padding:16px 13px 48px}
+    header.top{gap:10px}
+    .logo{width:34px; height:34px; font-size:13px}
+    h1{font-size:17px; line-height:1.25}
+    .sub{font-size:12px}
+    .toggle{padding:6px 9px; font-size:12.5px}
+    .live{padding:5px 9px; font-size:11.5px}
+    .tabs{overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none}
+    .tabs::-webkit-scrollbar{display:none}
+    .tab{white-space:nowrap; flex:0 0 auto; padding:9px 12px; font-size:13px}
+    .card{padding:14px 13px}
+    .card h3{font-size:14px}
+    .kpi{padding:12px 12px}
+    .kpi .val{font-size:21px}
+    table{font-size:12px}
+    th,td{padding:6px 6px}
+    .filters{gap:8px}
+    .filters input[type=search]{min-width:0; width:100%; flex:1 1 100%}
+    .filters select{flex:1 1 auto}
+    .alert-summary{align-items:flex-start}
+    .banner{font-size:12px; padding:9px 12px}
+    .scval{font-size:20px}
+    .foot-methods{font-size:11.5px}
+  }
+  /* larger tap targets on touch devices */
+  @media(hover:none){
+    .toggle, .tab{min-height:38px}
+    .exp-row td{padding-top:10px; padding-bottom:10px}
+  }
+
   @media print{
     :root{--page:#fff; --surface:#fff}
     .toggle, .live{display:none !important}
@@ -182,10 +232,12 @@
   </header>
   <nav class="tabs" id="tabs">
     <button class="tab active" data-view="overview">Overview</button>
+    <button class="tab" data-view="alerts">Alerts <span class="tab-badge" id="alertsBadge" hidden></span></button>
     <button class="tab" data-view="explorer">Complaint Explorer</button>
     <button class="tab" data-view="scorer">Live Scorer</button>
   </nav>
   <div id="view-overview" class="view"><div class="missing">Loading dashboard…</div></div>
+  <div id="view-alerts" class="view" hidden></div>
   <div id="view-explorer" class="view" hidden></div>
   <div id="view-scorer" class="view" hidden></div>
 </div>
@@ -465,7 +517,9 @@ function bindControls(){
   const themeBtn=document.getElementById("themeBtn");
   if(themeBtn) themeBtn.onclick=()=>{
     const cur=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";
-    document.documentElement.setAttribute("data-theme",cur); render(); bindControls();
+    document.documentElement.setAttribute("data-theme",cur);
+    render(); bindControls();
+    if(alertsBuilt) buildAlerts();   // timeline captures computed colors at draw time
   };
   const rb=document.getElementById("refreshBtn"); if(rb) rb.onclick=triggerRefresh;
   const pb=document.getElementById("pdfBtn"); if(pb) pb.onclick=downloadPDF;
@@ -553,18 +607,103 @@ async function pollStatus(){
 }
 
 // ---------------- tabs ----------------
-let activeView="overview", explorerBuilt=false, scorerReady=false;
+let activeView="overview", explorerBuilt=false, scorerReady=false, alertsBuilt=false;
 function bindTabs(){
   document.querySelectorAll("#tabs .tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.view));
 }
 function switchTab(name){
-  ["overview","explorer","scorer"].forEach(v=>{
+  ["overview","alerts","explorer","scorer"].forEach(v=>{
     const el=document.getElementById("view-"+v); if(el) el.hidden=(v!==name);
   });
   document.querySelectorAll("#tabs .tab").forEach(t=>t.classList.toggle("active",t.dataset.view===name));
   activeView=name;
+  if(name==="alerts" && !alertsBuilt){ buildAlerts(); alertsBuilt=true; }
   if(name==="explorer" && !explorerBuilt){ buildExplorer(); explorerBuilt=true; }
   if(name==="scorer" && !scorerReady){ initScorer(); }
+}
+
+// ---------------- alerts & anomalies ----------------
+const SEVMETA={critical:{c:"var(--crit)",i:"●",l:"Critical"},serious:{c:"var(--serious)",i:"▲",l:"Serious"},
+  warning:{c:"var(--warn)",i:"▲",l:"Warning"},good:{c:"var(--good)",i:"✓",l:"Improved"},info:{c:"var(--muted)",i:"•",l:"Info"}};
+function sevChip(s){const m=SEVMETA[s]||SEVMETA.info;return `<span class="sev" style="--sc:${m.c}">${m.i} ${m.l}</span>`;}
+function alertCard(a){
+  const m=SEVMETA[a.severity]||SEVMETA.info;
+  const title=a.metric||(a.name?`${a.name}`:"Alert");
+  const meta=a.kind?`<span class="acap">${a.kind}</span>`:(a.ym?`<span class="acap">${a.ym}</span>`:"");
+  return `<div class="alert" style="--sc:${m.c}">
+    <div class="alert-top">${sevChip(a.severity)} ${meta}</div>
+    <div class="alert-title">${title}</div>
+    <div class="alert-detail">${a.detail}</div></div>`;
+}
+function updateAlertsBadge(){
+  const a=D.alerts; if(!a) return;
+  const n=(a.counts.critical||0)+(a.counts.serious||0);
+  const b=document.getElementById("alertsBadge");
+  if(b && n>0){ b.textContent=n; b.hidden=false; b.style.background=a.counts.critical?"var(--crit)":"var(--serious)"; }
+}
+function buildAlerts(){
+  const a=D.alerts, v=document.getElementById("view-alerts");
+  if(!a){ v.innerHTML='<div class="card missing">No alerts data.</div>'; return; }
+  const attn = a.attention.length
+    ? a.attention.map(alertCard).join("")
+    : `<div class="allclear">✓ No metric anomalies in the latest complete month (${a.as_of||"—"}). Volume, escalation and churn-risk are within their normal ranges.</div>`;
+  v.innerHTML=`
+    <div class="alert-summary">
+      <div>
+        <h3 style="margin:0">Alerts &amp; anomalies</h3>
+        <p class="cap" style="margin:2px 0 0">Auto-detected from the complaint time-series and risk segments · latest complete month ${a.as_of||"—"}.</p>
+      </div>
+      <div class="sev-counts">
+        <span class="sev-count" style="--sc:var(--crit)">${a.counts.critical||0} critical</span>
+        <span class="sev-count" style="--sc:var(--serious)">${a.counts.serious||0} serious</span>
+        <span class="sev-count" style="--sc:var(--warn)">${a.counts.warning||0} warning</span>
+      </div>
+    </div>
+    <div class="grid">
+      <div class="card col-12">
+        <h3>Needs attention — latest month (${a.as_of||"—"})</h3>
+        <p class="cap">The most recent complete month vs its historical baseline (robust z-score). Recent months can reflect cases still being resolved.</p>
+        <div class="alert-list">${attn}</div>
+      </div>
+      <div class="card col-6">
+        <h3>Risk hotspots</h3>
+        <p class="cap">Products &amp; issues whose escalation or churn-risk runs well above the Amex average.</p>
+        <div class="alert-list">${a.hotspots.length?a.hotspots.map(alertCard).join(""):'<div class="cap">No segment hotspots.</div>'}</div>
+      </div>
+      <div class="card col-6">
+        <h3>Notable historical anomalies</h3>
+        <p class="cap">Biggest spikes across the series (≥3.5σ), most extreme first.</p>
+        <div class="alert-list">${a.anomalies.length?a.anomalies.map(alertCard).join(""):'<div class="cap">No historical anomalies.</div>'}</div>
+      </div>
+      <div class="card col-12">
+        <h3>${(a.timeline&&a.timeline.metric)||"Escalation rate"} anomaly timeline</h3>
+        <p class="cap">Monthly ${((a.timeline&&a.timeline.metric)||"escalation rate").toLowerCase()}; flagged months (≥3.5σ) are marked in red.</p>
+        <div id="alertTimeline"></div>
+      </div>
+    </div>`;
+  drawAlertTimeline(document.getElementById("alertTimeline"), (a.timeline&&a.timeline.points)||[]);
+}
+function drawAlertTimeline(container, points){
+  if(!container) return;
+  const pts=(points||[]).filter(p=>p.ym>="2016-01");
+  if(!pts.length){ container.innerHTML='<div class="cap">No data.</div>'; return; }
+  const W=container.clientWidth||760, H=240, padL=46, padR=14, padT=12, padB=40;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,height:H});
+  const n=pts.length, ys=pts.map(p=>p.value), ymax=Math.max(...ys)*1.15||1;
+  const X=i=>padL+(W-padL-padR)*(n<=1?0.5:i/(n-1)), Y=v=>H-padB-(H-padT-padB)*(v/ymax);
+  for(let t=0;t<=4;t++){const val=ymax*t/4,y=Y(val);
+    svg.appendChild(el("line",{x1:padL,y1:y,x2:W-padR,y2:y,class:"grid-line"}));
+    const tx=el("text",{x:padL-8,y:y+4,"text-anchor":"end",fill:css("--muted"),"font-size":11});tx.textContent=fmtPct(val,0);svg.appendChild(tx);}
+  const step=Math.ceil(n/8);
+  pts.forEach((p,i)=>{if(i%step&&i!==n-1)return;const tx=el("text",{x:X(i),y:H-padB+16,"text-anchor":"middle",fill:css("--muted"),"font-size":10.5});tx.textContent=p.ym;svg.appendChild(tx);});
+  let d="";pts.forEach((p,i)=>{d+=(i?"L":"M")+X(i)+","+Y(p.value);});
+  svg.appendChild(el("path",{d,fill:"none",stroke:css("--s1"),"stroke-width":1.8,"stroke-linejoin":"round"}));
+  pts.forEach((p,i)=>{ if(!p.flag) return;
+    const c=el("circle",{cx:X(i),cy:Y(p.value),r:5,fill:css("--crit"),stroke:css("--surface"),"stroke-width":1.5,style:"cursor:pointer"});
+    c.addEventListener("mousemove",e=>showTT(`<b>${p.ym}</b><br><span class="r">Escalation ${fmtPct(p.value)} · ${Math.abs(p.z).toFixed(1)}σ</span>`,e));
+    c.addEventListener("mouseleave",hideTT); svg.appendChild(c);
+  });
+  container.innerHTML="";container.appendChild(svg);
 }
 
 // ---------------- complaint explorer ----------------
@@ -725,7 +864,7 @@ async function init(){
       <p><code>python -m src.pipeline</code></p></div>`;
     return;
   }
-  render(); bindControls(); bindTabs();
+  render(); bindControls(); bindTabs(); updateAlertsBadge();
   window.addEventListener("resize",debouncedRender);
   if(SERVED){
     try{ const r=await fetch("/api/status",{cache:"no-store"}); hasAPI=r.ok; }
