@@ -1,0 +1,28 @@
+{
+  "name": "Amex Complaints MIS",
+  "dataColors": [
+    "#006FCF", "#2a78d6", "#1baf7a", "#eda100",
+    "#eb6834", "#4a3aa7", "#e34948", "#008300"
+  ],
+  "background": "#FCFCFB",
+  "foreground": "#0B0B0B",
+  "tableAccent": "#006FCF",
+  "good": "#0CA30C",
+  "neutral": "#FAB219",
+  "bad": "#D03B3B",
+  "maximum": "#0D366B",
+  "center": "#F0EFEC",
+  "minimum": "#CDE2FB",
+  "visualStyles": {
+    "*": {
+      "*": {
+        "title": [{ "fontColor": { "solid": { "color": "#0B0B0B" } }, "fontSize": 12, "fontFamily": "Segoe UI Semibold" }],
+        "background": [{ "color": { "solid": { "color": "#FFFFFF" } } }],
+        "border": [{ "color": { "solid": { "color": "#E1E0D9" } }, "show": true, "radius": 8 }]
+      }
+    },
+    "card": {
+      "*": { "labels": [{ "color": { "solid": { "color": "#006FCF" } }, "fontSize": 28 }] }
+    }
+  }
+}

@@ -1,0 +1,97 @@
+// ============================================================================
+// Amex Complaints Analytics & MIS — DAX measures
+// Paste into Power BI Desktop (Modeling > New measure) or a calculation group.
+// Model: fact_complaints (grain = one complaint) related to dim_date[date]
+//        via fact_complaints[date_received].
+// ============================================================================
+
+// ---- Volume -----------------------------------------------------------------
+Total Complaints = COUNTROWS ( fact_complaints )
+
+Complaints With Narrative =
+CALCULATE ( [Total Complaints], fact_complaints[has_narrative] = 1 )
+
+Narrative Coverage % =
+DIVIDE ( [Complaints With Narrative], [Total Complaints] )
+
+// ---- Escalation -------------------------------------------------------------
+Escalated Complaints =
+CALCULATE ( [Total Complaints], fact_complaints[is_escalated] = 1 )
+
+Escalation Rate =
+DIVIDE ( [Escalated Complaints], [Total Complaints] )
+
+// Model-predicted escalations (from the classifier's flag)
+Predicted Escalations =
+CALCULATE ( [Total Complaints], fact_complaints[escalation_flag] = 1 )
+
+Avg Escalation Score = AVERAGE ( fact_complaints[escalation_score] )
+
+// ---- Sentiment (VADER) ------------------------------------------------------
+Avg Sentiment = AVERAGE ( fact_complaints[sent_compound] )
+
+Negative Complaints =
+CALCULATE ( [Total Complaints], fact_complaints[is_negative] = 1 )
+
+Negative Sentiment Rate =
+DIVIDE ( [Negative Complaints], [Complaints With Narrative] )
+
+// ---- Churn risk -------------------------------------------------------------
+High Churn-Risk Customers =
+CALCULATE ( [Total Complaints], fact_complaints[churn_high_risk] = 1 )
+
+Churn-Risk Rate =
+DIVIDE ( [High Churn-Risk Customers], [Total Complaints] )
+
+Avg Churn-Risk Score = AVERAGE ( fact_complaints[churn_risk_score] )
+
+// ---- Service quality --------------------------------------------------------
+Timely Response Rate =
+DIVIDE (
+    CALCULATE ( [Total Complaints], fact_complaints[timely_flag] = 1 ),
+    [Total Complaints]
+)
+
+Relief Rate =
+DIVIDE (
+    CALCULATE ( [Total Complaints], fact_complaints[relief_flag] = 1 ),
+    [Total Complaints]
+)
+
+Avg Handling Days = AVERAGE ( fact_complaints[handling_days] )
+
+// ---- Time intelligence ------------------------------------------------------
+Complaints MoM % =
+VAR curr = [Total Complaints]
+VAR prev = CALCULATE ( [Total Complaints], DATEADD ( dim_date[date], -1, MONTH ) )
+RETURN DIVIDE ( curr - prev, prev )
+
+Complaints YoY % =
+VAR curr = [Total Complaints]
+VAR prev = CALCULATE ( [Total Complaints], DATEADD ( dim_date[date], -1, YEAR ) )
+RETURN DIVIDE ( curr - prev, prev )
+
+Complaints Rolling 3M =
+CALCULATE (
+    [Total Complaints],
+    DATESINPERIOD ( dim_date[date], MAX ( dim_date[date] ), -3, MONTH )
+)
+
+// ---- Industry benchmark (uses mis_company_benchmark_top200) -----------------
+// Standalone table; relate on nothing (report-level card) or filter to Amex.
+Amex Industry Rank =
+CALCULATE (
+    MAX ( mis_company_benchmark_top200[rank] ),
+    mis_company_benchmark_top200[is_amex] = TRUE ()
+)
+
+Industry Complaints (17M+) = SUM ( mis_industry_monthly[complaints] )
+
+// ---- KPI status color helper (conditional formatting) -----------------------
+Escalation Rate Status =
+SWITCH (
+    TRUE (),
+    [Escalation Rate] >= 0.35, "#d03b3b",   // critical
+    [Escalation Rate] >= 0.25, "#fab219",   // warning
+    "#0ca30c"                                // good
+)

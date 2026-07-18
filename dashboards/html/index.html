@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amex Complaints Analytics &amp; MIS</title>
+<style>
+  :root{
+    color-scheme: light;
+    --page:#f9f9f7; --surface:#fcfcfb; --surface-2:#ffffff;
+    --ink:#0b0b0b; --ink-2:#52514e; --muted:#898781;
+    --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+    --s1:#2a78d6; --s2:#008300; --s3:#e87ba4; --s4:#eda100;
+    --s5:#1baf7a; --s6:#eb6834; --s7:#4a3aa7; --s8:#e34948;
+    --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+    --brand:#006fcf; /* American Express blue, used for chrome accents only */
+  }
+  :root[data-theme="dark"]{
+    color-scheme: dark;
+    --page:#0d0d0d; --surface:#1a1a19; --surface-2:#212120;
+    --ink:#ffffff; --ink-2:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --s1:#3987e5; --s2:#008300; --s3:#d55181; --s4:#c98500;
+    --s5:#199e70; --s6:#d95926; --s7:#9085e9; --s8:#e66767;
+    --good:#0ca30c; --warn:#fab219; --serious:#ec835a; --crit:#d03b3b;
+    --brand:#2a8fe0;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:var(--page); color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI",sans-serif;
+    font-size:14px; line-height:1.45; -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--brand)}
+  .wrap{max-width:1240px; margin:0 auto; padding:24px 20px 64px}
+  header.top{display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:4px}
+  .logo{width:40px;height:40px;border-radius:8px;background:var(--brand);
+    color:#fff;display:grid;place-items:center;font-weight:800;letter-spacing:.5px;flex:none}
+  h1{font-size:20px; margin:0; font-weight:700}
+  .sub{color:var(--ink-2); font-size:13px; margin-top:2px}
+  .spacer{flex:1}
+  .toggle{border:1px solid var(--border); background:var(--surface); color:var(--ink-2);
+    border-radius:8px; padding:7px 12px; cursor:pointer; font-size:13px}
+  .toggle:hover{color:var(--ink)}
+  .toggle:disabled{opacity:.55; cursor:default}
+  .live{display:flex; align-items:center; gap:7px; font-size:12px; color:var(--ink-2);
+    border:1px solid var(--border); background:var(--surface); border-radius:8px; padding:6px 11px}
+  .live .dot{width:8px;height:8px;border-radius:50%;background:var(--good);flex:none;
+    box-shadow:0 0 0 0 rgba(12,163,12,.5); animation:pulse 2.2s infinite}
+  .live.busy .dot{background:var(--warn); animation:spin 1s linear infinite; box-shadow:none;
+    border-radius:2px}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(12,163,12,.45)}70%{box-shadow:0 0 0 7px rgba(12,163,12,0)}100%{box-shadow:0 0 0 0 rgba(12,163,12,0)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media(prefers-reduced-motion:reduce){.live .dot{animation:none}}
+  .banner{margin:14px 0 22px; padding:10px 14px; border:1px solid var(--border);
+    border-radius:10px; background:var(--surface); color:var(--ink-2); font-size:12.5px}
+  .banner b{color:var(--ink)}
+
+  .kpis{display:grid; grid-template-columns:repeat(6,1fr); gap:12px; margin-bottom:22px}
+  @media(max-width:1000px){.kpis{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:560px){.kpis{grid-template-columns:repeat(2,1fr)}}
+  .kpi{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px 15px}
+  .kpi .lab{font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.4px}
+  .kpi .val{font-size:26px; font-weight:750; margin-top:6px; letter-spacing:-.5px}
+  .kpi .note{font-size:11.5px; color:var(--ink-2); margin-top:3px}
+
+  .grid{display:grid; grid-template-columns:repeat(12,1fr); gap:16px}
+  .card{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:16px 18px 14px}
+  .card.col-12{grid-column:span 12}
+  .card.col-8{grid-column:span 8}
+  .card.col-6{grid-column:span 6}
+  .card.col-4{grid-column:span 4}
+  @media(max-width:900px){.card.col-8,.card.col-6,.card.col-4{grid-column:span 12}}
+  .card h3{margin:0 0 2px; font-size:14.5px; font-weight:680}
+  .card .cap{color:var(--muted); font-size:12px; margin:0 0 12px}
+  .legend{display:flex; gap:14px; flex-wrap:wrap; font-size:12px; color:var(--ink-2); margin:2px 0 10px}
+  .legend .it{display:flex; align-items:center; gap:6px}
+  .swatch{width:11px;height:11px;border-radius:3px; flex:none}
+  svg{display:block; width:100%; overflow:visible}
+  .axis text{fill:var(--muted); font-size:11px}
+  .axis line, .axis path{stroke:var(--axis)}
+  .grid-line{stroke:var(--grid); stroke-width:1}
+  .bar{rx:3}
+  .dot{stroke:var(--surface); stroke-width:1.5}
+  .tt{position:fixed; pointer-events:none; z-index:50; background:var(--surface-2);
+    border:1px solid var(--border); border-radius:9px; padding:8px 10px; font-size:12px;
+    color:var(--ink); box-shadow:0 6px 24px rgba(0,0,0,.16); opacity:0; transition:opacity .08s; max-width:260px}
+  .tt b{color:var(--ink)}
+  .tt .r{color:var(--ink-2)}
+  table{width:100%; border-collapse:collapse; font-size:12.5px}
+  th,td{text-align:left; padding:7px 8px; border-bottom:1px solid var(--border); font-variant-numeric:tabular-nums}
+  th{color:var(--muted); font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.3px}
+  td.num,th.num{text-align:right}
+  tr.amex td{background:color-mix(in srgb, var(--brand) 12%, transparent); font-weight:650}
+  .chip{display:inline-block; font-size:10.5px; padding:1px 7px; border-radius:20px;
+    background:var(--brand); color:#fff; margin-left:6px; vertical-align:middle}
+  .modelrow{display:flex; gap:22px; flex-wrap:wrap}
+  .metric{min-width:120px}
+  .metric .m{font-size:24px; font-weight:750}
+  .metric .k{font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.4px}
+  .terms{display:flex; flex-wrap:wrap; gap:7px; margin-top:4px}
+  .term{font-size:12px; padding:4px 9px; border-radius:7px; border:1px solid var(--border);
+    background:var(--surface-2); color:var(--ink-2)}
+  footer{margin-top:34px; color:var(--muted); font-size:12px; text-align:center; line-height:1.7}
+  .foot-methods{max-width:820px;margin:10px auto 0;text-align:left;color:var(--ink-2)}
+  .missing{padding:40px; text-align:center; color:var(--ink-2)}
+  code{background:var(--surface-2); border:1px solid var(--border); border-radius:5px; padding:1px 5px; font-size:12px}
+  @media print{
+    :root{--page:#fff; --surface:#fff}
+    .toggle, .live{display:none !important}
+    .wrap{max-width:none; padding:0}
+    .card, .kpi{break-inside:avoid; page-break-inside:avoid}
+    .grid{gap:10px}
+    body{font-size:11px}
+    .banner{background:#f4f8fd}
+  }
+</style>
+</head>
+<body>
+<div class="wrap" id="app">
+  <div class="missing">Loading dashboard data… If nothing appears, run
+    <code>python -m src.pipeline</code> to generate <code>data.js</code>.</div>
+</div>
+<div class="tt" id="tt"></div>
+
+<script src="data.js"></script>
+<script>
+"use strict";
+let D = window.DASHBOARD_DATA || null;      // replaced by fetched data when served
+const SERVED = location.protocol.startsWith("http");
+const P = ["--s1","--s2","--s3","--s4","--s5","--s6","--s7","--s8"].map(v=>`var(${v})`);
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const fmtInt = n => n.toLocaleString("en-US");
+const fmtPct = (x,d=1) => (x*100).toFixed(d)+"%";
+const tt = document.getElementById("tt");
+function showTT(html,e){tt.innerHTML=html; tt.style.opacity=1;
+  const pad=14; let x=e.clientX+pad, y=e.clientY+pad;
+  if(x+tt.offsetWidth>innerWidth) x=e.clientX-tt.offsetWidth-pad;
+  if(y+tt.offsetHeight>innerHeight) y=e.clientY-tt.offsetHeight-pad;
+  tt.style.left=x+"px"; tt.style.top=y+"px";}
+function hideTT(){tt.style.opacity=0;}
+
+// ---- small chart helpers (dependency-free SVG) ----
+const NS="http://www.w3.org/2000/svg";
+const el=(t,a={})=>{const n=document.createElementNS(NS,t);for(const k in a)n.setAttribute(k,a[k]);return n;};
+
+function hbars(container, rows, {color,valueFmt=fmtInt,rateMode=false}={}){
+  const W=container.clientWidth||520, rowH=26, padL=Math.min(190,W*0.42), padR=64, top=6;
+  const H=top+rows.length*rowH+6;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,height:H});
+  const max=Math.max(...rows.map(r=>r.v))||1;
+  rows.forEach((r,i)=>{
+    const y=top+i*rowH;
+    const bw=Math.max(2,(W-padL-padR)*(r.v/max));
+    svg.appendChild(el("text",{x:padL-10,y:y+rowH/2+4,"text-anchor":"end",fill:css("--ink-2"),"font-size":12})).textContent=r.label.length>28?r.label.slice(0,27)+"…":r.label;
+    const bar=el("rect",{x:padL,y:y+4,width:bw,height:rowH-10,rx:4,fill:color||P[i%8]});
+    svg.appendChild(bar);
+    const lab=el("text",{x:padL+bw+8,y:y+rowH/2+4,fill:css("--ink"),"font-size":12,"font-weight":600});
+    lab.textContent=valueFmt(r.v); svg.appendChild(lab);
+    bar.style.cursor="default";
+    bar.addEventListener("mousemove",e=>showTT(`<b>${r.label}</b><br><span class="r">${r.ttl||"Count"}:</span> ${valueFmt(r.v)}${r.n?` <span class="r">(n=${fmtInt(r.n)})</span>`:""}`,e));
+    bar.addEventListener("mouseleave",hideTT);
+  });
+  container.innerHTML=""; container.appendChild(svg);
+}
+
+function lineChart(container, series, {yFmt=fmtPct, yMax=null}={}){
+  const W=container.clientWidth||760, H=260, padL=46, padR=16, padT=12, padB=42;
+  const svg=el("svg",{viewBox:`0 0 ${W} ${H}`,height:H});
+  const xs=series[0].pts.map(p=>p.x);
+  const n=xs.length;
+  const allY=series.flatMap(s=>s.pts.map(p=>p.y));
+  const ymax=yMax!==null?yMax:Math.max(...allY)*1.12||1;
+  const X=i=>padL+(W-padL-padR)*(n<=1?0.5:i/(n-1));
+  const Y=v=>H-padB-(H-padT-padB)*(v/ymax);
+  // gridlines + y ticks
+  const ticks=4;
+  for(let t=0;t<=ticks;t++){const v=ymax*t/ticks; const y=Y(v);
+    svg.appendChild(el("line",{x1:padL,y1:y,x2:W-padR,y2:y,class:"grid-line"}));
+    const tx=el("text",{x:padL-8,y:y+4,"text-anchor":"end",fill:css("--muted"),"font-size":11}); tx.textContent=yFmt(v,0); svg.appendChild(tx);}
+  // x labels (sparse)
+  const step=Math.ceil(n/8);
+  xs.forEach((x,i)=>{if(i%step&&i!==n-1)return; const tx=el("text",{x:X(i),y:H-padB+16,"text-anchor":"middle",fill:css("--muted"),"font-size":10.5}); tx.textContent=x; svg.appendChild(tx);});
+  // lines
+  series.forEach(s=>{
+    let d=""; s.pts.forEach((p,i)=>{d+=(i?"L":"M")+X(i)+","+Y(p.y);});
+    svg.appendChild(el("path",{d,fill:"none",stroke:s.color,"stroke-width":2,"stroke-linejoin":"round","stroke-linecap":"round"}));
+  });
+  // hover crosshair
+  const hl=el("line",{y1:padT,y2:H-padB,stroke:css("--axis"),"stroke-width":1,opacity:0});
+  svg.appendChild(hl);
+  const dots=series.map(s=>{const c=el("circle",{r:4,fill:s.color,stroke:css("--surface"),"stroke-width":1.5,opacity:0}); svg.appendChild(c); return c;});
+  const hit=el("rect",{x:padL,y:padT,width:W-padL-padR,height:H-padT-padB,fill:"transparent"});
+  hit.addEventListener("mousemove",e=>{
+    const r=svg.getBoundingClientRect(); const rel=(e.clientX-r.left)/r.width*W;
+    let i=Math.round((rel-padL)/((W-padL-padR)/(n-1))); i=Math.max(0,Math.min(n-1,i));
+    hl.setAttribute("x1",X(i)); hl.setAttribute("x2",X(i)); hl.setAttribute("opacity",1);
+    let rows=series.map((s,k)=>{dots[k].setAttribute("cx",X(i));dots[k].setAttribute("cy",Y(s.pts[i].y));dots[k].setAttribute("opacity",1);
+      return `<div><span class="swatch" style="display:inline-block;background:${s.color}"></span> ${s.name}: <b>${s.fmt?s.fmt(s.pts[i].y):yFmt(s.pts[i].y)}</b></div>`;}).join("");
+    showTT(`<b>${xs[i]}</b>${rows}`,e);
+  });
+  hit.addEventListener("mouseleave",()=>{hl.setAttribute("opacity",0);dots.forEach(d=>d.setAttribute("opacity",0));hideTT();});
+  svg.appendChild(hit);
+  container.innerHTML=""; container.appendChild(svg);
+}
+
+function donut(container, rows){
+  const W=container.clientWidth||300, S=Math.min(W,220), cx=S/2, cy=S/2, r=S/2-6, ir=r*0.62;
+  const svg=el("svg",{viewBox:`0 0 ${S} ${S}`,height:S,width:S,style:"margin:0 auto"});
+  const total=rows.reduce((a,b)=>a+b.value,0)||1; let ang=-Math.PI/2;
+  rows.forEach((row,i)=>{
+    const frac=row.value/total, a2=ang+frac*2*Math.PI;
+    const x1=cx+r*Math.cos(ang),y1=cy+r*Math.sin(ang),x2=cx+r*Math.cos(a2),y2=cy+r*Math.sin(a2);
+    const xi1=cx+ir*Math.cos(a2),yi1=cy+ir*Math.sin(a2),xi2=cx+ir*Math.cos(ang),yi2=cy+ir*Math.sin(ang);
+    const large=frac>0.5?1:0;
+    const p=el("path",{d:`M${x1},${y1} A${r},${r} 0 ${large} 1 ${x2},${y2} L${xi1},${yi1} A${ir},${ir} 0 ${large} 0 ${xi2},${yi2} Z`,fill:P[i%8],stroke:css("--surface"),"stroke-width":2});
+    p.addEventListener("mousemove",e=>showTT(`<b>${row.label}</b><br><span class="r">${fmtInt(row.value)} · ${fmtPct(frac)}</span>`,e));
+    p.addEventListener("mouseleave",hideTT);
+    svg.appendChild(p); ang=a2;
+  });
+  container.innerHTML=""; container.appendChild(svg);
+}
+
+function legend(container, items){
+  container.innerHTML=""; const wrap=document.createElement("div"); wrap.className="legend";
+  items.forEach((it,i)=>{const d=document.createElement("div"); d.className="it";
+    d.innerHTML=`<span class="swatch" style="background:${it.color||P[i%8]}"></span>${it.label}`; wrap.appendChild(d);});
+  container.appendChild(wrap);
+}
+
+// ---------------- render ----------------
+function render(){
+  if(!D){return;}
+  const k=D.kpis, app=document.getElementById("app");
+  app.innerHTML=`
+    <header class="top">
+      <div class="logo">AX</div>
+      <div>
+        <h1>American Express — Complaints Analytics &amp; MIS</h1>
+        <div class="sub">Escalation &amp; churn intelligence over ${fmtInt(k.total_complaints)} real CFPB complaints · ${k.date_min} → ${k.date_max}</div>
+      </div>
+      <div class="spacer"></div>
+      <div class="live" id="liveStatus" hidden><span class="dot"></span><span id="liveText">Live</span></div>
+      <button class="toggle" id="refreshBtn" hidden>🔄 Refresh now</button>
+      <button class="toggle" id="pdfBtn">⬇ PDF</button>
+      <button class="toggle" id="themeBtn">◐ Theme</button>
+    </header>
+
+    <div class="banner">
+      <b>Data:</b> U.S. CFPB Consumer Complaint Database (public). The industry MIS layer streams the
+      full <b>${D.industry.total_rows_processed?fmtInt(D.industry.total_rows_processed):"6M+"}</b>-complaint national dataset;
+      the modelling layer deep-dives the <b>${fmtInt(k.total_complaints)}</b> American Express complaints.
+      Sentiment via <b>VADER</b> · escalation &amp; churn via supervised ML.
+    </div>
+
+    <div class="kpis" id="kpis"></div>
+
+    <div class="grid">
+      <div class="card col-8">
+        <h3>Complaint volume &amp; risk over time</h3>
+        <p class="cap">Monthly Amex complaint counts with model-derived escalation, negative-sentiment and churn-risk rates.</p>
+        <div id="legVol"></div>
+        <div id="chartVol"></div>
+      </div>
+      <div class="card col-4">
+        <h3>Company response mix</h3>
+        <p class="cap">How Amex closed each complaint.</p>
+        <div id="donutResp"></div>
+        <div id="legResp"></div>
+      </div>
+
+      <div class="card col-6">
+        <h3>Top issues by escalation rate</h3>
+        <p class="cap">Share of complaints that required relief or breached the timely-response SLA (min 50 cases).</p>
+        <div id="escIssue"></div>
+      </div>
+      <div class="card col-6">
+        <h3>Complaints by product</h3>
+        <p class="cap">Volume across Amex product lines.</p>
+        <div id="prodBars"></div>
+      </div>
+
+      <div class="card col-6">
+        <h3>Highest churn-risk issues</h3>
+        <p class="cap">Issues with the largest share of high churn-risk customers (model score ≥ ${D.risk?fmtPct(0.5,0):"50%"}).</p>
+        <div id="churnIssue"></div>
+      </div>
+      <div class="card col-6">
+        <h3>Geographic hotspots</h3>
+        <p class="cap">Top states by complaint volume.</p>
+        <div id="stateBars"></div>
+      </div>
+
+      <div class="card col-12" id="modelCard">
+        <h3>Predictive model report cards</h3>
+        <p class="cap">Held-out test performance. Escalation = will this case need relief/miss SLA · Churn-risk = is this customer at retention risk.</p>
+        <div id="models"></div>
+      </div>
+
+      <div class="card col-12" id="industryCard">
+        <h3>Industry benchmark — Amex vs. the field <span class="chip" id="rankChip"></span></h3>
+        <p class="cap">Company league table from the full national dataset. Timely = on-time responses · Relief = complaints closed with monetary/non-monetary relief.</p>
+        <div id="benchTable"></div>
+      </div>
+    </div>
+
+    <footer>
+      <div>American Express Complaints Analytics &amp; MIS Platform · built on the public CFPB Consumer Complaint Database.</div>
+      <div class="foot-methods">
+        <b>Method notes.</b> <i>Escalation label</i>: a complaint is "escalated" when it closed with monetary/non-monetary
+        relief or breached the timely-response SLA. <i>Churn-risk</i>: the CFPB data has no account-closure field, so churn
+        is a transparent service-recovery proxy (negative VADER sentiment compounded by a service failure) that a
+        gradient-boosted model learns to score. Not affiliated with or endorsed by American Express; "Amex" refers to
+        complaints filed against the company in the public regulatory dataset.
+      </div>
+    </footer>`;
+
+  // KPIs
+  const kp=[
+    {lab:"Total complaints",val:fmtInt(k.total_complaints),note:`${fmtInt(k.with_narrative)} with narrative`},
+    {lab:"Escalation rate",val:fmtPct(k.escalation_rate),note:"relief or SLA breach"},
+    {lab:"Negative sentiment",val:fmtPct(k.negative_sentiment_rate),note:"of scored narratives"},
+    {lab:"High churn-risk",val:fmtPct(k.high_churn_risk_rate),note:"model-flagged customers"},
+    {lab:"Avg handling",val:k.avg_handling_days.toFixed(1)+"d",note:"receipt → company"},
+    {lab:"Coverage",val:(new Date(k.date_max).getFullYear()-new Date(k.date_min).getFullYear())+"y",note:`${k.date_min.slice(0,7)}→${k.date_max.slice(0,7)}`},
+  ];
+  document.getElementById("kpis").innerHTML=kp.map(x=>`<div class="kpi"><div class="lab">${x.lab}</div><div class="val">${x.val}</div><div class="note">${x.note}</div></div>`).join("");
+
+  // volume + risk line chart
+  const m=D.monthly.filter(x=>x.ym>="2015-01");
+  const volSeries=[
+    {name:"Complaints (indexed)",color:P[0],pts:m.map(x=>({x:x.ym,y:x.complaints})),fmt:v=>fmtInt(Math.round(v)),axis:"count"},
+  ];
+  // Two panels share x but different scale -> show counts as one chart, rates as another to avoid dual axis.
+  lineChart(document.getElementById("chartVol"),
+    [{name:"Complaints",color:P[0],pts:m.map(x=>({x:x.ym,y:x.complaints})),fmt:v=>fmtInt(Math.round(v))}],
+    {yFmt:(v)=>fmtInt(Math.round(v)),});
+  legend(document.getElementById("legVol"),[{label:"Monthly complaints",color:P[0]}]);
+  // add a second stacked rate chart below within same card
+  const cv=document.getElementById("chartVol");
+  const rateHost=document.createElement("div"); rateHost.style.marginTop="10px"; cv.parentNode.appendChild(rateHost);
+  lineChart(rateHost,[
+    {name:"Escalation rate",color:P[5],pts:m.map(x=>({x:x.ym,y:x.escalation_rate}))},
+    {name:"Negative sentiment",color:P[7],pts:m.map(x=>({x:x.ym,y:x.negative_rate}))},
+    {name:"Churn-risk share",color:P[6],pts:m.map(x=>({x:x.ym,y:x.churn_risk}))},
+  ],{yFmt:(v,d=1)=>fmtPct(v,d)});
+  legend(document.getElementById("legVol"),[
+    {label:"Monthly complaints (top)",color:P[0]},
+    {label:"Escalation rate",color:P[5]},
+    {label:"Negative sentiment",color:P[7]},
+    {label:"Churn-risk share",color:P[6]},
+  ]);
+
+  // response donut
+  donut(document.getElementById("donutResp"), D.breakdowns.company_response.slice(0,6));
+  legend(document.getElementById("legResp"), D.breakdowns.company_response.slice(0,6).map((r,i)=>({label:`${r.label} (${fmtInt(r.value)})`,color:P[i%8]})));
+
+  // escalation by issue
+  hbars(document.getElementById("escIssue"),
+    D.risk.escalation_by_issue.map(r=>({label:r.label,v:r.rate,n:r.n,ttl:"Escalation rate"})),
+    {color:css("--serious"),valueFmt:v=>fmtPct(v)});
+  // product bars
+  hbars(document.getElementById("prodBars"),
+    D.breakdowns.product.map(r=>({label:r.label,v:r.value,ttl:"Complaints"})),{color:P[0]});
+  // churn by issue
+  hbars(document.getElementById("churnIssue"),
+    D.risk.churn_by_issue.map(r=>({label:r.label,v:r.rate,n:r.n,ttl:"High churn-risk share"})),
+    {color:css("--crit"),valueFmt:v=>fmtPct(v)});
+  // states
+  hbars(document.getElementById("stateBars"),
+    D.breakdowns.state.map(r=>({label:r.label,v:r.value,ttl:"Complaints"})),{color:P[4]});
+
+  // models
+  const mv=D.models||{}; const host=document.getElementById("models");
+  function card(title,mm,extra=""){ if(!mm)return `<div class="metric"><div class="k">${title}</div><div class="m">—</div></div>`;
+    return `<div style="min-width:260px;border:1px solid var(--border);border-radius:10px;padding:12px 14px">
+      <div style="font-weight:680;margin-bottom:8px">${title}</div>
+      <div class="modelrow">
+        <div class="metric"><div class="m">${mm.roc_auc.toFixed(3)}</div><div class="k">ROC-AUC</div></div>
+        <div class="metric"><div class="m">${mm.pr_auc.toFixed(3)}</div><div class="k">PR-AUC</div></div>
+        <div class="metric"><div class="m">${fmtInt(mm.n_test)}</div><div class="k">test rows</div></div>
+      </div>${extra}</div>`;}
+  let extraTerms="";
+  if(mv.top_escalation_terms){extraTerms=`<div style="margin-top:10px"><div class="k" style="margin-bottom:5px">Top escalation-driving terms</div><div class="terms">${mv.top_escalation_terms.map(t=>`<span class="term">${t.term}</span>`).join("")}</div></div>`;}
+  host.innerHTML=`<div class="modelrow">${card("Escalation classifier (Logistic Regression + TF-IDF)",mv.escalation,extraTerms)}${card("Churn-risk model (Gradient-Boosted Trees)",mv.churn)}</div>`;
+
+  // industry benchmark
+  const ind=D.industry||{};
+  if(ind.top_companies&&ind.top_companies.length){
+    document.getElementById("rankChip").textContent = ind.amex_rank?`Amex ranks #${ind.amex_rank} of ${fmtInt(ind.distinct_companies)}`:"";
+    const rows=ind.top_companies.map(c=>`<tr class="${c.is_amex?"amex":""}">
+      <td>${c.company}${c.is_amex?' <span class="chip">AMEX</span>':""}</td>
+      <td class="num">${fmtInt(c.complaints)}</td>
+      <td class="num">${fmtPct(c.timely_rate)}</td>
+      <td class="num">${fmtPct(c.relief_rate)}</td></tr>`).join("");
+    document.getElementById("benchTable").innerHTML=`<table>
+      <thead><tr><th>Company</th><th class="num">Complaints</th><th class="num">Timely %</th><th class="num">Relief %</th></tr></thead>
+      <tbody>${rows}</tbody></table>`;
+  } else {
+    document.getElementById("industryCard").style.display="none";
+  }
+}
+
+// ---- controls: theme toggle + live refresh (re-bound after each render) ----
+let lastStamp = null;
+function bindControls(){
+  const themeBtn=document.getElementById("themeBtn");
+  if(themeBtn) themeBtn.onclick=()=>{
+    const cur=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";
+    document.documentElement.setAttribute("data-theme",cur); render(); bindControls();
+  };
+  const rb=document.getElementById("refreshBtn");
+  if(rb && SERVED){ rb.hidden=false; rb.onclick=triggerRefresh; }
+  const ls=document.getElementById("liveStatus");
+  if(ls && SERVED) ls.hidden=false;
+  const pb=document.getElementById("pdfBtn");
+  if(pb) pb.onclick=downloadPDF;
+}
+
+// Download the server-generated executive PDF; fall back to browser print.
+async function downloadPDF(){
+  const pb=document.getElementById("pdfBtn");
+  if(!SERVED){ window.print(); return; }
+  if(pb){ pb.disabled=true; pb.textContent="⏳ Building…"; }
+  try{
+    const r=await fetch("/api/report.pdf"); if(!r.ok) throw new Error("report failed");
+    const blob=await r.blob(); const url=URL.createObjectURL(blob);
+    const a=document.createElement("a"); a.href=url;
+    a.download="amex_executive_report.pdf"; document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(url);
+  }catch(e){ window.print(); }
+  finally{ if(pb){ pb.disabled=false; pb.textContent="⬇ PDF"; } }
+}
+let rt; function debouncedRender(){clearTimeout(rt); rt=setTimeout(()=>{render();bindControls();},150);}
+
+function setLive(text, busy){
+  const ls=document.getElementById("liveStatus"), lt=document.getElementById("liveText");
+  if(!ls||!lt) return; ls.classList.toggle("busy",!!busy); lt.textContent=text;
+}
+function fmtStamp(iso){ if(!iso) return ""; const d=new Date(iso);
+  return d.toLocaleString(undefined,{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"}); }
+
+async function loadData(){
+  if(SERVED){
+    try{ const r=await fetch("data.json?_="+Date.now(),{cache:"no-store"});
+      if(r.ok) return await r.json(); }catch(e){}
+  }
+  return window.DASHBOARD_DATA || null;
+}
+
+async function reloadAndRender(){
+  const data=await loadData(); if(data){ D=data; render(); bindControls(); }
+}
+
+async function triggerRefresh(){
+  const rb=document.getElementById("refreshBtn");
+  if(rb) rb.disabled=true; setLive("Refreshing…",true);
+  try{ await fetch("/api/refresh",{method:"POST"}); }
+  catch(e){ setLive("Refresh unavailable",false); if(rb) rb.disabled=false; }
+}
+
+async function pollStatus(){
+  if(!SERVED) return;
+  try{
+    const r=await fetch("/api/status",{cache:"no-store"}); if(!r.ok) return;
+    const s=await r.json();
+    const stamp=s.version && s.version.updated_at;
+    if(s.running){ setLive("Refreshing…",true); }
+    else{
+      setLive("Updated "+fmtStamp(stamp), false);
+      const rb=document.getElementById("refreshBtn"); if(rb) rb.disabled=false;
+      if(stamp && stamp!==lastStamp){
+        if(lastStamp!==null) await reloadAndRender();   // data changed -> hot reload
+        lastStamp=stamp;
+      }
+    }
+  }catch(e){/* server not up: silently stay static */}
+}
+
+async function init(){
+  if(matchMedia("(prefers-color-scheme: dark)").matches)
+    document.documentElement.setAttribute("data-theme","dark");
+  const data=await loadData(); D=data;
+  if(!D){
+    document.getElementById("app").innerHTML=`<div class="missing">
+      <h2>No data found</h2><p>Generate the dashboard extract first:</p>
+      <p><code>python -m src.pipeline</code></p></div>`;
+    return;
+  }
+  render(); bindControls();
+  window.addEventListener("resize",debouncedRender);
+  if(SERVED){ await pollStatus(); setInterval(pollStatus, 12000); }
+}
+init();
+</script>
+</body>
+</html>
