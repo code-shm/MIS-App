@@ -20,6 +20,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import threading
 import time
 from functools import partial
@@ -110,9 +111,16 @@ def _auto_loop(interval_min: int) -> None:
 
 
 def main(argv=None) -> int:
+    # Cloud hosts (Render/Railway/Fly/Heroku) inject $PORT and expect a bind on
+    # 0.0.0.0; locally we default to a private bind on 127.0.0.1.
+    env_port = os.environ.get("PORT")
+    default_host = os.environ.get("HOST", "0.0.0.0" if env_port else "127.0.0.1")
+
     ap = argparse.ArgumentParser(description="Serve the live agentic dashboard")
-    ap.add_argument("--port", type=int, default=8000)
-    ap.add_argument("--interval", type=int, default=60, help="Auto-refresh interval (minutes)")
+    ap.add_argument("--port", type=int, default=int(env_port) if env_port else 8000)
+    ap.add_argument("--host", default=default_host, help="Bind address (0.0.0.0 for cloud)")
+    ap.add_argument("--interval", type=int, default=int(os.environ.get("REFRESH_INTERVAL_MIN", 60)),
+                    help="Auto-refresh interval (minutes)")
     ap.add_argument("--no-auto", action="store_true", help="Disable the auto-refresh loop")
     ap.add_argument("--refresh-on-start", action="store_true", help="Refresh immediately at startup")
     args = ap.parse_args(argv)
@@ -125,12 +133,14 @@ def main(argv=None) -> int:
         threading.Thread(target=_auto_loop, args=(args.interval,), daemon=True).start()
 
     handler = partial(Handler, directory=str(HTML_DIR))
-    httpd = ThreadingHTTPServer(("127.0.0.1", args.port), handler)
-    url = f"http://localhost:{args.port}/index.html"
+    httpd = ThreadingHTTPServer((args.host, args.port), handler)
+    shown = "localhost" if args.host in ("127.0.0.1", "0.0.0.0") else args.host
+    url = f"http://{shown}:{args.port}/index.html"
     print("\n" + "=" * 60)
     print(f"  Amex Complaints dashboard is LIVE  ->  {url}")
-    print(f"  Auto-refresh: {'off' if args.no_auto else f'every {args.interval} min'}"
-          "  |  Manual: the 'Refresh now' button, or POST /api/refresh")
+    print(f"  Bind: {args.host}:{args.port}  |  "
+          f"Auto-refresh: {'off' if args.no_auto else f'every {args.interval} min'}")
+    print("  Manual refresh: the 'Refresh now' button, or POST /api/refresh")
     print("  Ctrl+C to stop.")
     print("=" * 60 + "\n")
     try:

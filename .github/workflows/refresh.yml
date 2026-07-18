@@ -33,6 +33,9 @@ jobs:
       - name: Refresh + rescore (trains models fresh on the runner)
         run: python -m src.refresh --retrain
 
+      - name: Rebuild in-browser scorer assets
+        run: python -m src.browser_export
+
       - name: Regenerate executive PDF
         run: |
           python -m src.report
@@ -47,6 +50,7 @@ jobs:
           git config user.email "actions@github.com"
           git add dashboards/html/data.json dashboards/html/data.js \
                   dashboards/html/version.json \
+                  dashboards/html/scorer_assets.js \
                   dashboards/html/amex_executive_report.pdf \
                   dashboards/html/amex_dashboard_standalone.html
           if git diff --cached --quiet; then

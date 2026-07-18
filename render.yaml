@@ -1,0 +1,16 @@
+# Render blueprint for the LIVE agentic dashboard (real-time Refresh + PDF).
+# Deploy: push to GitHub, then Render -> New -> Blueprint -> pick this repo.
+services:
+  - type: web
+    name: amex-mis-dashboard
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m src.serve
+    healthCheckPath: /api/status
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12"
+      - key: REFRESH_INTERVAL_MIN
+        value: "180"     # auto-refresh every 3h (free dynos sleep when idle)

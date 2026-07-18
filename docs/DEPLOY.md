@@ -71,14 +71,24 @@ The included workflow refreshes daily and on demand:
 
 ## Want the *live* server (real-time Refresh button + dynamic PDF)?
 
-Deploy `src/serve.py` to a host that allows long-running processes — e.g.
-**Render**, **Railway**, or **Fly.io**:
+`src/serve.py` is cloud-ready — it reads `$PORT` and binds `0.0.0.0`
+automatically when a host injects it. Deploy to any host that allows a
+long-running process:
 
-- Start command: `python -m src.serve --port $PORT --interval 60`
-- Build command: `pip install -r requirements.txt`
-- Bind: the server already listens on `127.0.0.1`; set host `0.0.0.0` via the
-  platform, or run behind their proxy. (For these hosts, change the bind address
-  in `serve.py` to `0.0.0.0` and read `PORT` from the environment.)
+**Render (blueprint included):** push to GitHub → Render → **New → Blueprint** →
+pick the repo. `render.yaml` sets it up (`pip install -r requirements.txt`, start
+`python -m src.serve`, health check `/api/status`).
 
-Then the deployed dashboard shows the live pill, working **Refresh now**, and
-server-generated PDFs — the full agentic experience.
+**Railway / Heroku:** the included `Procfile` (`web: python -m src.serve`) is
+detected automatically — just create a service from the repo.
+
+**Fly.io / any VM:** `pip install -r requirements.txt` then
+`python -m src.serve --host 0.0.0.0 --port 8080`.
+
+On these hosts the deployed dashboard shows the live pill, a working **Refresh
+now** button, and server-generated PDFs — the full agentic experience. (Free
+tiers sleep when idle; the first visit wakes the dyno and a visitor can refresh
+on demand.)
+
+> Vercel remains the best home for the fast, free **static** dashboard; use a
+> long-running host only if you specifically want the live Refresh button online.

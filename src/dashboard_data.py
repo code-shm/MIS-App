@@ -130,6 +130,27 @@ def build(scored: pd.DataFrame, top_terms: list[tuple[str, float]] | None = None
             "relief_rate": round(float(r["relief_rate"]), 4),
         } for _, r in mi.iterrows()]
 
+    # -- Complaint explorer slice (row-level, curated) --------------------
+    # Ship a bounded set of real complaints with narratives so the explorer can
+    # drill from aggregates to cases. Prioritise the highest-risk ones (that's
+    # what an ops team triages) while keeping the payload small.
+    exp = df[df["has_narrative"] == 1].copy()
+    exp["_risk"] = exp[["escalation_score", "churn_risk_score"]].max(axis=1)
+    exp = exp.sort_values("_risk", ascending=False).head(700)
+    complaints = [{
+        "id": int(r["complaint_id"]) if pd.notna(r["complaint_id"]) else None,
+        "date": str(r["date_received"].date()) if pd.notna(r["date_received"]) else "",
+        "product": str(r["product"]),
+        "issue": str(r["issue"]),
+        "state": str(r["state"]),
+        "sentiment": str(r["sentiment_label"]),
+        "compound": round(float(r["sent_compound"]), 3),
+        "escalation": round(float(r["escalation_score"]), 3),
+        "churn": round(float(r["churn_risk_score"]), 3),
+        "escalated": int(r["is_escalated"]),
+        "snippet": (str(r["narrative"])[:240] + ("…" if len(str(r["narrative"])) > 240 else "")),
+    } for _, r in exp.iterrows()]
+
     payload = {
         "generated_from": "CFPB Consumer Complaint Database",
         "company": config.TARGET_COMPANY,
@@ -139,6 +160,7 @@ def build(scored: pd.DataFrame, top_terms: list[tuple[str, float]] | None = None
         "risk": risk,
         "models": models,
         "industry": industry,
+        "complaints": complaints,
     }
 
     blob = json.dumps(payload, indent=2, default=str)

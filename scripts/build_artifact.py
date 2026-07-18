@@ -25,8 +25,12 @@ def main() -> int:
 
     style = re.search(r"<style>.*?</style>", html, re.S).group(0)
     body = re.search(r"<body>(.*?)</body>", html, re.S).group(1)
-    body = body.replace('<script src="data.js"></script>',
-                        f"<script>window.DASHBOARD_DATA = {data};</script>")
+    inline = f"<script>window.DASHBOARD_DATA = {data};</script>"
+    for name in ("scorer_assets.js", "scorer.js"):
+        p = HTML.parent / name
+        if p.exists():
+            inline += f"\n<script>{p.read_text(encoding='utf-8')}</script>"
+    body = body.replace('<script src="data.js"></script>', inline)
 
     OUT.write_text(style + "\n" + body, encoding="utf-8")
     print(f"Wrote {OUT.relative_to(ROOT)} ({OUT.stat().st_size/1024:,.0f} KB)")

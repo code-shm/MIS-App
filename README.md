@@ -18,6 +18,18 @@ parallel Power BI model) and a BigQuery-ready data layer.
 📊 **[View the interactive dashboard](https://claude.ai/code/artifact/5faf3056-f02f-44b2-a89e-e070daef6e55)**
 &nbsp;·&nbsp; or open `dashboards/html/amex_dashboard_standalone.html` locally (static snapshot, no server needed).
 
+### Dashboard features
+
+- **Overview** — KPI cards, monthly volume + risk trends, product/issue/state
+  breakdowns, response mix, and the industry benchmark.
+- **Complaint Explorer** — searchable, sortable, filterable table of the
+  highest-risk individual complaints (escalation %, churn-risk, sentiment); click
+  a row to read the narrative or send it straight to the scorer.
+- **Live Scorer** — paste any complaint text and get an escalation probability
+  and VADER sentiment computed **entirely in the browser** from the exact trained
+  models (the JS port is validated to 0.00000 deviation vs. the Python pipeline —
+  see `scripts/validate_scorer.py`), including the words driving the prediction.
+
 ### Agentic (self-updating) mode
 
 Run it as a live service that keeps pulling new complaints and lets you refresh

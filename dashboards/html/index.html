@@ -107,6 +107,54 @@
   .foot-methods{max-width:820px;margin:10px auto 0;text-align:left;color:var(--ink-2)}
   .missing{padding:40px; text-align:center; color:var(--ink-2)}
   code{background:var(--surface-2); border:1px solid var(--border); border-radius:5px; padding:1px 5px; font-size:12px}
+
+  /* tabs */
+  .tabs{display:flex; gap:4px; margin:18px 0 20px; border-bottom:1px solid var(--border)}
+  .tab{border:none; background:none; color:var(--ink-2); font-size:13.5px; font-weight:560;
+    padding:9px 15px; cursor:pointer; border-bottom:2px solid transparent; margin-bottom:-1px}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--brand); border-bottom-color:var(--brand)}
+
+  /* explorer */
+  .filters{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:6px 0 12px}
+  .filters input[type=search], .filters select{
+    border:1px solid var(--border); background:var(--surface-2); color:var(--ink);
+    border-radius:8px; padding:7px 10px; font-size:13px; font-family:inherit}
+  .filters input[type=search]{min-width:230px; flex:1}
+  .filters .chk{display:flex; align-items:center; gap:6px; font-size:13px; color:var(--ink-2)}
+  table.explorer{width:100%; border-collapse:collapse; font-size:12.5px}
+  table.explorer th{position:sticky; top:0; background:var(--surface); z-index:1}
+  table.explorer td, table.explorer th{padding:7px 9px; border-bottom:1px solid var(--border); vertical-align:middle}
+  .exp-row{cursor:pointer}
+  .exp-row:hover td{background:color-mix(in srgb, var(--brand) 6%, transparent)}
+  .mini{display:inline-block; width:44px; height:6px; border-radius:3px; background:var(--grid);
+    vertical-align:middle; margin-right:6px; overflow:hidden}
+  .mini>span{display:block; height:100%; border-radius:3px}
+  .sdot{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px; vertical-align:middle}
+  .sdot.negative{background:var(--crit)} .sdot.positive{background:var(--good)} .sdot.neutral{background:var(--muted)}
+  .exp-detail td{background:var(--surface-2)}
+  .snip{font-style:italic; color:var(--ink-2); margin-bottom:8px; line-height:1.5}
+  .toggle.small{padding:4px 10px; font-size:12px}
+
+  /* scorer */
+  textarea{width:100%; border:1px solid var(--border); background:var(--surface-2); color:var(--ink);
+    border-radius:10px; padding:11px 12px; font-size:13.5px; font-family:inherit; resize:vertical; line-height:1.5}
+  textarea:focus, .filters input:focus, .filters select:focus{outline:2px solid var(--brand); outline-offset:1px}
+  .scbtns{display:flex; gap:10px; align-items:center; margin-top:10px}
+  .toggle.primary{background:var(--brand); color:#fff; border-color:var(--brand); font-weight:600}
+  .toggle.primary:hover{filter:brightness(1.06)}
+  .examples{display:flex; flex-direction:column; gap:6px; margin-top:6px; align-items:flex-start}
+  .term.ex{cursor:pointer; text-align:left}
+  .term.ex:hover{border-color:var(--brand); color:var(--ink)}
+  .scmetric{padding:12px 0; border-top:1px solid var(--border)}
+  .scmetric:first-of-type{border-top:none}
+  .scmetric .k{font-size:11.5px; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; margin-bottom:5px}
+  .scval{font-size:22px; font-weight:730; letter-spacing:-.3px}
+  .scbar{height:9px; border-radius:5px; background:var(--grid); overflow:hidden; margin:2px 0 6px}
+  .scbar>span{display:block; height:100%; border-radius:5px; transition:width .3s}
+  .term.up{border-color:color-mix(in srgb,var(--crit) 45%,var(--border)); color:var(--ink)}
+  .term.down{border-color:color-mix(in srgb,var(--good) 45%,var(--border)); color:var(--ink)}
+
   @media print{
     :root{--page:#fff; --surface:#fff}
     .toggle, .live{display:none !important}
@@ -119,9 +167,27 @@
 </style>
 </head>
 <body>
-<div class="wrap" id="app">
-  <div class="missing">Loading dashboard data… If nothing appears, run
-    <code>python -m src.pipeline</code> to generate <code>data.js</code>.</div>
+<div class="wrap">
+  <header class="top">
+    <div class="logo">AX</div>
+    <div>
+      <h1>American Express — Complaints Analytics &amp; MIS</h1>
+      <div class="sub" id="subtitle">Loading…</div>
+    </div>
+    <div class="spacer"></div>
+    <div class="live" id="liveStatus" hidden><span class="dot"></span><span id="liveText">Live</span></div>
+    <button class="toggle" id="refreshBtn" hidden>🔄 Refresh now</button>
+    <button class="toggle" id="pdfBtn">⬇ PDF</button>
+    <button class="toggle" id="themeBtn">◐ Theme</button>
+  </header>
+  <nav class="tabs" id="tabs">
+    <button class="tab active" data-view="overview">Overview</button>
+    <button class="tab" data-view="explorer">Complaint Explorer</button>
+    <button class="tab" data-view="scorer">Live Scorer</button>
+  </nav>
+  <div id="view-overview" class="view"><div class="missing">Loading dashboard…</div></div>
+  <div id="view-explorer" class="view" hidden></div>
+  <div id="view-scorer" class="view" hidden></div>
 </div>
 <div class="tt" id="tt"></div>
 
@@ -233,21 +299,10 @@ function legend(container, items){
 // ---------------- render ----------------
 function render(){
   if(!D){return;}
-  const k=D.kpis, app=document.getElementById("app");
+  const k=D.kpis, app=document.getElementById("view-overview");
+  const st=document.getElementById("subtitle");
+  if(st) st.textContent=`Escalation & churn intelligence over ${fmtInt(k.total_complaints)} real CFPB complaints · ${k.date_min} → ${k.date_max}`;
   app.innerHTML=`
-    <header class="top">
-      <div class="logo">AX</div>
-      <div>
-        <h1>American Express — Complaints Analytics &amp; MIS</h1>
-        <div class="sub">Escalation &amp; churn intelligence over ${fmtInt(k.total_complaints)} real CFPB complaints · ${k.date_min} → ${k.date_max}</div>
-      </div>
-      <div class="spacer"></div>
-      <div class="live" id="liveStatus" hidden><span class="dot"></span><span id="liveText">Live</span></div>
-      <button class="toggle" id="refreshBtn" hidden>🔄 Refresh now</button>
-      <button class="toggle" id="pdfBtn">⬇ PDF</button>
-      <button class="toggle" id="themeBtn">◐ Theme</button>
-    </header>
-
     <div class="banner">
       <b>Data:</b> U.S. CFPB Consumer Complaint Database (public). The industry MIS layer streams the
       full <b>${D.industry.total_rows_processed?fmtInt(D.industry.total_rows_processed):"6M+"}</b>-complaint national dataset;
@@ -497,17 +552,180 @@ async function pollStatus(){
   }catch(e){/* server not up: silently stay static */}
 }
 
+// ---------------- tabs ----------------
+let activeView="overview", explorerBuilt=false, scorerReady=false;
+function bindTabs(){
+  document.querySelectorAll("#tabs .tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.view));
+}
+function switchTab(name){
+  ["overview","explorer","scorer"].forEach(v=>{
+    const el=document.getElementById("view-"+v); if(el) el.hidden=(v!==name);
+  });
+  document.querySelectorAll("#tabs .tab").forEach(t=>t.classList.toggle("active",t.dataset.view===name));
+  activeView=name;
+  if(name==="explorer" && !explorerBuilt){ buildExplorer(); explorerBuilt=true; }
+  if(name==="scorer" && !scorerReady){ initScorer(); }
+}
+
+// ---------------- complaint explorer ----------------
+function buildExplorer(){
+  const rows=D.complaints||[];
+  const products=[...new Set(rows.map(r=>r.product))].sort();
+  document.getElementById("view-explorer").innerHTML=`
+    <div class="card">
+      <h3>Complaint explorer</h3>
+      <p class="cap">${fmtInt(rows.length)} highest-risk Amex complaints with narratives. Search, filter and sort;
+        click a row to read the snippet, or send it to the live scorer.</p>
+      <div class="filters">
+        <input id="expSearch" type="search" placeholder="Search narrative, issue, state…">
+        <select id="expProduct"><option value="">All products</option>${products.map(p=>`<option>${p}</option>`).join("")}</select>
+        <select id="expSent"><option value="">All sentiment</option><option>Negative</option><option>Neutral</option><option>Positive</option></select>
+        <select id="expSort">
+          <option value="risk">Sort: highest risk</option>
+          <option value="escalation">Escalation ↓</option>
+          <option value="churn">Churn risk ↓</option>
+          <option value="date">Newest</option>
+          <option value="compound">Most negative</option>
+        </select>
+        <label class="chk"><input type="checkbox" id="expEsc"> Escalated only</label>
+      </div>
+      <div id="expCount" class="cap"></div>
+      <div style="overflow-x:auto"><table class="explorer" id="expTable"></table></div>
+    </div>`;
+  ["expSearch","expProduct","expSent","expSort","expEsc"].forEach(id=>{
+    const el=document.getElementById(id);
+    el.addEventListener("input",renderExplorerTable); el.addEventListener("change",renderExplorerTable);
+  });
+  renderExplorerTable();
+}
+function renderExplorerTable(){
+  let rows=(D.complaints||[]).slice();
+  const q=(document.getElementById("expSearch").value||"").toLowerCase().trim();
+  const prod=document.getElementById("expProduct").value;
+  const sent=document.getElementById("expSent").value;
+  const sort=document.getElementById("expSort").value;
+  const escOnly=document.getElementById("expEsc").checked;
+  if(q) rows=rows.filter(r=>(r.snippet+" "+r.issue+" "+r.state+" "+r.product).toLowerCase().includes(q));
+  if(prod) rows=rows.filter(r=>r.product===prod);
+  if(sent) rows=rows.filter(r=>r.sentiment===sent);
+  if(escOnly) rows=rows.filter(r=>r.escalated===1);
+  const cmp={risk:(a,b)=>Math.max(b.escalation,b.churn)-Math.max(a.escalation,a.churn),
+    escalation:(a,b)=>b.escalation-a.escalation, churn:(a,b)=>b.churn-a.churn,
+    date:(a,b)=>String(b.date).localeCompare(String(a.date)), compound:(a,b)=>a.compound-b.compound};
+  rows.sort(cmp[sort]||cmp.risk);
+  const CAP=200, view=rows.slice(0,CAP);
+  document.getElementById("expCount").textContent =
+    rows.length>CAP ? `${fmtInt(rows.length)} complaints (showing top ${CAP})` : `${fmtInt(rows.length)} complaints`;
+  const bar=(v,c)=>`<span class="mini"><span style="width:${Math.round(v*100)}%;background:${c}"></span></span>`;
+  document.getElementById("expTable").innerHTML=
+    `<thead><tr><th>Date</th><th>Product</th><th>Issue</th><th>St</th><th>Sentiment</th>
+      <th class="num">Escalation</th><th class="num">Churn risk</th></tr></thead>
+     <tbody>${view.map(r=>`
+      <tr class="exp-row">
+        <td>${r.date}</td><td>${r.product}</td><td>${r.issue}</td><td>${r.state}</td>
+        <td><span class="sdot ${r.sentiment.toLowerCase()}"></span>${r.sentiment}</td>
+        <td class="num">${bar(r.escalation,'var(--serious)')} ${(r.escalation*100).toFixed(0)}%</td>
+        <td class="num">${bar(r.churn,'var(--crit)')} ${(r.churn*100).toFixed(0)}%</td>
+      </tr>
+      <tr class="exp-detail" hidden><td colspan="7">
+        <div class="snip">“${r.snippet}”</div>
+        <button class="toggle small scoreThis" data-t="${encodeURIComponent(r.snippet)}">Score this narrative ↗</button>
+      </td></tr>`).join("")}</tbody>`;
+  document.querySelectorAll("#expTable .exp-row").forEach(tr=>tr.onclick=()=>{
+    const d=tr.nextElementSibling; if(d&&d.classList.contains("exp-detail")) d.hidden=!d.hidden;
+  });
+  document.querySelectorAll("#expTable .scoreThis").forEach(b=>b.onclick=(e)=>{
+    e.stopPropagation(); const txt=decodeURIComponent(b.dataset.t);
+    switchTab("scorer"); const go=()=>runScorer(txt);
+    if(scorerReady) go(); else setTimeout(go,400);
+  });
+}
+
+// ---------------- live scorer ----------------
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement("script");s.src=src;s.onload=res;s.onerror=rej;document.head.appendChild(s);});}
+async function initScorer(){
+  const v=document.getElementById("view-scorer");
+  v.innerHTML=`<div class="card"><p class="cap">Loading model (VADER lexicon + escalation weights)…</p></div>`;
+  try{
+    if(!window.SCORER_ASSETS) await loadScript("scorer_assets.js");
+    if(!window.Scorer) await loadScript("scorer.js");
+  }catch(e){ v.innerHTML=`<div class="card missing">Scorer assets not found. Run <code>python -m src.browser_export</code>.</div>`; return; }
+  scorerReady=true; buildScorerUI();
+}
+function buildScorerUI(){
+  const auc=(window.SCORER_ASSETS&&window.SCORER_ASSETS.escalation.auc)||"";
+  document.getElementById("view-scorer").innerHTML=`
+    <div class="grid">
+      <div class="card col-6">
+        <h3>Live complaint scorer</h3>
+        <p class="cap">Paste any complaint narrative — sentiment (VADER) and escalation risk are computed
+          <b>in your browser</b> with the exact trained models. Nothing is sent anywhere.</p>
+        <textarea id="scText" rows="7" placeholder="e.g. They charged my card twice and refused to refund me. I've called five times and no one helps…"></textarea>
+        <div class="scbtns">
+          <button class="toggle primary" id="scRun">Score complaint</button>
+          <button class="toggle" id="scClear">Clear</button>
+        </div>
+        <div class="cap" style="margin-top:10px">Try an example:</div>
+        <div class="examples" id="scEx"></div>
+      </div>
+      <div class="card col-6" id="scOut"><div class="cap">Results will appear here.</div></div>
+    </div>`;
+  document.getElementById("scRun").onclick=()=>runScorer(document.getElementById("scText").value);
+  document.getElementById("scClear").onclick=()=>{document.getElementById("scText").value="";
+    document.getElementById("scOut").innerHTML='<div class="cap">Results will appear here.</div>';};
+  const exs=["They charged me twice and refused to refund. Worst customer service ever!!!",
+    "My billing issue was resolved quickly and the agent was very helpful and kind.",
+    "I disputed a fraudulent charge and they closed my account without any notice."];
+  document.getElementById("scEx").innerHTML=exs.map(e=>`<button class="term ex" data-t="${encodeURIComponent(e)}">${e.slice(0,44)}…</button>`).join("");
+  document.querySelectorAll("#scEx .ex").forEach(b=>b.onclick=()=>{const t=decodeURIComponent(b.dataset.t);
+    document.getElementById("scText").value=t; runScorer(t);});
+}
+function runScorer(text){
+  const out=document.getElementById("scOut"); if(!out) return;
+  const ta=document.getElementById("scText"); if(ta) ta.value=text;
+  text=(text||"").trim();
+  if(!text){ out.innerHTML='<div class="cap">Enter some complaint text first.</div>'; return; }
+  if(!window.Scorer){ out.innerHTML='<div class="cap">Model still loading…</div>'; return; }
+  const s=window.Scorer.sentiment(text), e=window.Scorer.escalation(text);
+  const escPct=(e.prob*100).toFixed(1);
+  const escColor=e.prob>=0.5?'var(--crit)':e.prob>=0.35?'var(--warn)':'var(--good)';
+  const sentColor=s.compound<=-0.05?'var(--crit)':s.compound>=0.05?'var(--good)':'var(--muted)';
+  const auc=(window.SCORER_ASSETS&&window.SCORER_ASSETS.escalation.auc)||"";
+  const chips=(arr,cls)=>arr.length?arr.map(t=>`<span class="term ${cls}">${t.term}</span>`).join(""):'<span class="cap">none</span>';
+  out.innerHTML=`
+    <h3>Prediction</h3>
+    <div class="scmetric">
+      <div class="k">Escalation risk</div>
+      <div class="scbar"><span style="width:${escPct}%;background:${escColor}"></span></div>
+      <div class="scval" style="color:${escColor}">${escPct}%</div>
+      <div class="cap">Probability this complaint needs relief or misses the timely-response SLA
+        (in-browser text model, ROC-AUC ${auc}).</div>
+    </div>
+    <div class="scmetric">
+      <div class="k">Sentiment — VADER</div>
+      <div class="scval" style="color:${sentColor}">${s.label} · ${s.compound.toFixed(3)}</div>
+      <div class="cap">${s.band} — positive ${s.pos} / neutral ${s.neu} / negative ${s.neg}</div>
+    </div>
+    <div class="scmetric">
+      <div class="k">Words pushing escalation ↑</div>
+      <div class="terms">${chips(e.top_up,'up')}</div>
+      <div class="k" style="margin-top:10px">Words lowering it ↓</div>
+      <div class="terms">${chips(e.top_down,'down')}</div>
+      <div class="cap" style="margin-top:8px">${e.matched} term(s) matched the model vocabulary.</div>
+    </div>`;
+}
+
 async function init(){
   if(matchMedia("(prefers-color-scheme: dark)").matches)
     document.documentElement.setAttribute("data-theme","dark");
   const data=await loadData(); D=data;
   if(!D){
-    document.getElementById("app").innerHTML=`<div class="missing">
+    document.getElementById("view-overview").innerHTML=`<div class="missing">
       <h2>No data found</h2><p>Generate the dashboard extract first:</p>
       <p><code>python -m src.pipeline</code></p></div>`;
     return;
   }
-  render(); bindControls();
+  render(); bindControls(); bindTabs();
   window.addEventListener("resize",debouncedRender);
   if(SERVED){
     try{ const r=await fetch("/api/status",{cache:"no-store"}); hasAPI=r.ok; }
