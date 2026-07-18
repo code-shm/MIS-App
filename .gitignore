@@ -8,6 +8,10 @@ data/outputs/*.parquet
 data/outputs/*.csv
 *.log
 !data/**/.gitkeep
+# Keep the small precomputed MIS tables so the deployed dashboard & CI refresh
+# retain the industry-benchmark panel without re-running the 17M-row pass.
+!data/outputs/mis_industry_monthly.parquet
+!data/outputs/mis_company_benchmark.parquet
 
 # Internal build intermediate (published as an Artifact instead)
 dashboards/html/_artifact_body.html
