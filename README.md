@@ -1,4 +1,4 @@
-# Amex-Based Complaints Analytics & MIS Platform
+# Amex-Based Complaints Analytics & MIS Platform.
 
 An end-to-end **management-information & predictive-analytics system** for
 consumer complaints, built to simulate American Express service-operations
