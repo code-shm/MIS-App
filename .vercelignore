@@ -1,0 +1,18 @@
+# Vercel serves ONLY the static dashboard (dashboards/html via outputDirectory).
+# Hide the Python/Node backend so Vercel's zero-config detection doesn't try to
+# build src/serve.py as a serverless function. These files are for local + CI.
+src/
+scripts/
+bin/
+notebooks/
+sql/
+models/
+reports/
+data/
+docs/
+.github/
+*.py
+requirements.txt
+package.json
+package-lock.json
+node_modules/
