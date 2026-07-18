@@ -11,6 +11,421 @@
     "date_min": "2011-12-01",
     "date_max": "2026-07-17"
   },
+  "states_metrics": {
+    "AE": {
+      "n": 23,
+      "escalation": 0.2609,
+      "churn": 0.0,
+      "sentiment": 0.165,
+      "negative": 0.2857
+    },
+    "AK": {
+      "n": 56,
+      "escalation": 0.2143,
+      "churn": 0.0,
+      "sentiment": 0.1686,
+      "negative": 0.2
+    },
+    "AL": {
+      "n": 482,
+      "escalation": 0.2925,
+      "churn": 0.0104,
+      "sentiment": 0.0151,
+      "negative": 0.4171
+    },
+    "AP": {
+      "n": 24,
+      "escalation": 0.4583,
+      "churn": 0.0417,
+      "sentiment": 0.2376,
+      "negative": 0.0769
+    },
+    "AR": {
+      "n": 264,
+      "escalation": 0.2992,
+      "churn": 0.0644,
+      "sentiment": -0.0976,
+      "negative": 0.5854
+    },
+    "AS": {
+      "n": 1,
+      "escalation": 1.0,
+      "churn": 0.0,
+      "sentiment": 0.0,
+      "negative": 0.0
+    },
+    "AZ": {
+      "n": 1119,
+      "escalation": 0.2779,
+      "churn": 0.0241,
+      "sentiment": 0.0289,
+      "negative": 0.4055
+    },
+    "CA": {
+      "n": 8556,
+      "escalation": 0.2876,
+      "churn": 0.0304,
+      "sentiment": 0.0163,
+      "negative": 0.4255
+    },
+    "CO": {
+      "n": 754,
+      "escalation": 0.317,
+      "churn": 0.0159,
+      "sentiment": -0.0039,
+      "negative": 0.4618
+    },
+    "CT": {
+      "n": 701,
+      "escalation": 0.3124,
+      "churn": 0.0043,
+      "sentiment": 0.0338,
+      "negative": 0.3795
+    },
+    "DC": {
+      "n": 349,
+      "escalation": 0.2923,
+      "churn": 0.0201,
+      "sentiment": 0.0746,
+      "negative": 0.3488
+    },
+    "DE": {
+      "n": 251,
+      "escalation": 0.255,
+      "churn": 0.0199,
+      "sentiment": -0.0174,
+      "negative": 0.4632
+    },
+    "FL": {
+      "n": 5941,
+      "escalation": 0.2658,
+      "churn": 0.0158,
+      "sentiment": 0.0115,
+      "negative": 0.4315
+    },
+    "FM": {
+      "n": 1,
+      "escalation": 0.0,
+      "churn": 0.0,
+      "sentiment": 0.7975,
+      "negative": 0.0
+    },
+    "GA": {
+      "n": 3404,
+      "escalation": 0.272,
+      "churn": 0.0123,
+      "sentiment": 0.0117,
+      "negative": 0.4204
+    },
+    "GU": {
+      "n": 18,
+      "escalation": 0.0556,
+      "churn": 0.0,
+      "sentiment": 0.3493,
+      "negative": 0.0
+    },
+    "HI": {
+      "n": 202,
+      "escalation": 0.2921,
+      "churn": 0.0099,
+      "sentiment": 0.026,
+      "negative": 0.38
+    },
+    "IA": {
+      "n": 162,
+      "escalation": 0.284,
+      "churn": 0.0247,
+      "sentiment": 0.0532,
+      "negative": 0.3833
+    },
+    "ID": {
+      "n": 141,
+      "escalation": 0.3191,
+      "churn": 0.0213,
+      "sentiment": 0.0197,
+      "negative": 0.4603
+    },
+    "IL": {
+      "n": 1970,
+      "escalation": 0.2883,
+      "churn": 0.0107,
+      "sentiment": 0.027,
+      "negative": 0.3974
+    },
+    "IN": {
+      "n": 502,
+      "escalation": 0.3247,
+      "churn": 0.002,
+      "sentiment": 0.0606,
+      "negative": 0.3645
+    },
+    "KS": {
+      "n": 234,
+      "escalation": 0.2778,
+      "churn": 0.0214,
+      "sentiment": -0.0416,
+      "negative": 0.5222
+    },
+    "KY": {
+      "n": 274,
+      "escalation": 0.2774,
+      "churn": 0.0109,
+      "sentiment": -0.0395,
+      "negative": 0.4919
+    },
+    "LA": {
+      "n": 590,
+      "escalation": 0.378,
+      "churn": 0.0102,
+      "sentiment": 0.0289,
+      "negative": 0.3837
+    },
+    "MA": {
+      "n": 1438,
+      "escalation": 0.3268,
+      "churn": 0.007,
+      "sentiment": 0.0489,
+      "negative": 0.3502
+    },
+    "MD": {
+      "n": 1285,
+      "escalation": 0.263,
+      "churn": 0.0086,
+      "sentiment": 0.0482,
+      "negative": 0.3712
+    },
+    "ME": {
+      "n": 129,
+      "escalation": 0.2946,
+      "churn": 0.0233,
+      "sentiment": 0.0493,
+      "negative": 0.36
+    },
+    "MI": {
+      "n": 1267,
+      "escalation": 0.2991,
+      "churn": 0.0592,
+      "sentiment": -0.0117,
+      "negative": 0.4686
+    },
+    "MN": {
+      "n": 688,
+      "escalation": 0.3052,
+      "churn": 0.0233,
+      "sentiment": 0.0102,
+      "negative": 0.4477
+    },
+    "MO": {
+      "n": 543,
+      "escalation": 0.2891,
+      "churn": 0.011,
+      "sentiment": 0.0318,
+      "negative": 0.416
+    },
+    "MP": {
+      "n": 1,
+      "escalation": 1.0,
+      "churn": 0.0,
+      "sentiment": 0.0,
+      "negative": 0.0
+    },
+    "MS": {
+      "n": 272,
+      "escalation": 0.2426,
+      "churn": 0.0074,
+      "sentiment": 0.0193,
+      "negative": 0.4144
+    },
+    "MT": {
+      "n": 91,
+      "escalation": 0.2747,
+      "churn": 0.0,
+      "sentiment": 0.0797,
+      "negative": 0.3333
+    },
+    "NC": {
+      "n": 1605,
+      "escalation": 0.2773,
+      "churn": 0.0143,
+      "sentiment": 0.016,
+      "negative": 0.4351
+    },
+    "ND": {
+      "n": 50,
+      "escalation": 0.3,
+      "churn": 0.02,
+      "sentiment": 0.0931,
+      "negative": 0.3846
+    },
+    "NE": {
+      "n": 132,
+      "escalation": 0.2955,
+      "churn": 0.0379,
+      "sentiment": 0.0144,
+      "negative": 0.4576
+    },
+    "NH": {
+      "n": 154,
+      "escalation": 0.3312,
+      "churn": 0.0065,
+      "sentiment": -0.0504,
+      "negative": 0.4932
+    },
+    "NJ": {
+      "n": 2512,
+      "escalation": 0.2886,
+      "churn": 0.0135,
+      "sentiment": 0.0483,
+      "negative": 0.3777
+    },
+    "NM": {
+      "n": 180,
+      "escalation": 0.3833,
+      "churn": 0.0056,
+      "sentiment": -0.021,
+      "negative": 0.481
+    },
+    "NV": {
+      "n": 816,
+      "escalation": 0.2782,
+      "churn": 0.0208,
+      "sentiment": -0.0019,
+      "negative": 0.4347
+    },
+    "NY": {
+      "n": 6328,
+      "escalation": 0.2865,
+      "churn": 0.0194,
+      "sentiment": 0.0113,
+      "negative": 0.4294
+    },
+    "OH": {
+      "n": 1348,
+      "escalation": 0.2953,
+      "churn": 0.0193,
+      "sentiment": 0.0057,
+      "negative": 0.4314
+    },
+    "OK": {
+      "n": 231,
+      "escalation": 0.3247,
+      "churn": 0.039,
+      "sentiment": -0.0153,
+      "negative": 0.4348
+    },
+    "OR": {
+      "n": 461,
+      "escalation": 0.3189,
+      "churn": 0.0195,
+      "sentiment": 0.0158,
+      "negative": 0.4444
+    },
+    "PA": {
+      "n": 1782,
+      "escalation": 0.289,
+      "churn": 0.014,
+      "sentiment": 0.0516,
+      "negative": 0.3552
+    },
+    "PR": {
+      "n": 162,
+      "escalation": 0.2099,
+      "churn": 0.0123,
+      "sentiment": -0.0289,
+      "negative": 0.5161
+    },
+    "RI": {
+      "n": 174,
+      "escalation": 0.3736,
+      "churn": 0.023,
+      "sentiment": -0.0346,
+      "negative": 0.4459
+    },
+    "SC": {
+      "n": 666,
+      "escalation": 0.2973,
+      "churn": 0.015,
+      "sentiment": 0.0318,
+      "negative": 0.3948
+    },
+    "SD": {
+      "n": 55,
+      "escalation": 0.3455,
+      "churn": 0.0364,
+      "sentiment": 0.0537,
+      "negative": 0.3077
+    },
+    "TN": {
+      "n": 674,
+      "escalation": 0.3071,
+      "churn": 0.0163,
+      "sentiment": -0.0154,
+      "negative": 0.4476
+    },
+    "TX": {
+      "n": 4539,
+      "escalation": 0.2899,
+      "churn": 0.0183,
+      "sentiment": 0.0126,
+      "negative": 0.4245
+    },
+    "UT": {
+      "n": 459,
+      "escalation": 0.3094,
+      "churn": 0.0218,
+      "sentiment": 0.0144,
+      "negative": 0.4152
+    },
+    "VA": {
+      "n": 1596,
+      "escalation": 0.3189,
+      "churn": 0.0169,
+      "sentiment": 0.0364,
+      "negative": 0.3919
+    },
+    "VI": {
+      "n": 23,
+      "escalation": 0.2174,
+      "churn": 0.0,
+      "sentiment": 0.0474,
+      "negative": 0.0
+    },
+    "VT": {
+      "n": 58,
+      "escalation": 0.431,
+      "churn": 0.0,
+      "sentiment": -0.0276,
+      "negative": 0.4783
+    },
+    "WA": {
+      "n": 1210,
+      "escalation": 0.3,
+      "churn": 0.0273,
+      "sentiment": 0.0176,
+      "negative": 0.4229
+    },
+    "WI": {
+      "n": 452,
+      "escalation": 0.3385,
+      "churn": 0.0288,
+      "sentiment": 0.0358,
+      "negative": 0.4366
+    },
+    "WV": {
+      "n": 116,
+      "escalation": 0.3707,
+      "churn": 0.0172,
+      "sentiment": 0.062,
+      "negative": 0.322
+    },
+    "WY": {
+      "n": 56,
+      "escalation": 0.2679,
+      "churn": 0.0536,
+      "sentiment": -0.0587,
+      "negative": 0.5556
+    }
+  },
   "monthly": [
     {
       "ym": "2011-12",

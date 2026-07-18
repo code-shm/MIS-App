@@ -35,6 +35,8 @@ def main() -> int:
     if not args.fast:
         run([PY, "-m", "src.mis_aggregate"])              # industry MIS (needs the bulk zip)
         run([PY, "-m", "src.pipeline", "--from-enriched"])  # refresh extract with MIS layer
+    run([PY, "-m", "src.browser_export"])                 # in-browser scorer assets
+    run([PY, "-m", "src.geo_export"])                     # US map geometry (one-time fetch)
     run([PY, "scripts/build_standalone.py"])
     run([PY, "scripts/export_powerbi.py"])
     run([PY, "-m", "src.bigquery_upload", "--emit-ddl-only"])

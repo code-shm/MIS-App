@@ -133,6 +133,23 @@
   .allclear{padding:16px; border:1px dashed color-mix(in srgb,var(--good) 45%,var(--border));
     border-radius:10px; background:color-mix(in srgb,var(--good) 7%,transparent); color:var(--ink-2); font-size:13px}
 
+  /* map */
+  .map-head{display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; margin-bottom:12px}
+  .segmented{display:inline-flex; border:1px solid var(--border); border-radius:9px; overflow:hidden; flex-wrap:wrap}
+  .segmented button{border:none; background:var(--surface-2); color:var(--ink-2); font-size:12.5px;
+    padding:8px 12px; cursor:pointer; border-right:1px solid var(--border)}
+  .segmented button:last-child{border-right:none}
+  .segmented button.on{background:var(--brand); color:#fff; font-weight:600}
+  .map-wrap{display:grid; grid-template-columns:1fr 220px; gap:18px; align-items:start}
+  @media(max-width:760px){.map-wrap{grid-template-columns:1fr}}
+  .legendbar{height:12px; border-radius:6px}
+  .legendlabels{display:flex; justify-content:space-between; font-size:11.5px; color:var(--ink-2); margin-top:4px; font-variant-numeric:tabular-nums}
+  .toprow{display:flex; align-items:center; gap:8px; font-size:12px; margin-bottom:5px}
+  .tcode{width:26px; font-weight:650; color:var(--ink)}
+  .tbar{flex:1; height:8px; background:var(--grid); border-radius:4px; overflow:hidden}
+  .tbar>span{display:block; height:100%; border-radius:4px}
+  .tval{width:56px; text-align:right; color:var(--ink-2); font-variant-numeric:tabular-nums}
+
   /* explorer */
   .filters{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:6px 0 12px}
   .filters input[type=search], .filters select{
@@ -233,11 +250,13 @@
   <nav class="tabs" id="tabs">
     <button class="tab active" data-view="overview">Overview</button>
     <button class="tab" data-view="alerts">Alerts <span class="tab-badge" id="alertsBadge" hidden></span></button>
+    <button class="tab" data-view="map">Geographic map</button>
     <button class="tab" data-view="explorer">Complaint Explorer</button>
     <button class="tab" data-view="scorer">Live Scorer</button>
   </nav>
   <div id="view-overview" class="view"><div class="missing">Loading dashboard…</div></div>
   <div id="view-alerts" class="view" hidden></div>
+  <div id="view-map" class="view" hidden></div>
   <div id="view-explorer" class="view" hidden></div>
   <div id="view-scorer" class="view" hidden></div>
 </div>
@@ -612,12 +631,13 @@ function bindTabs(){
   document.querySelectorAll("#tabs .tab").forEach(t=>t.onclick=()=>switchTab(t.dataset.view));
 }
 function switchTab(name){
-  ["overview","alerts","explorer","scorer"].forEach(v=>{
+  ["overview","alerts","map","explorer","scorer"].forEach(v=>{
     const el=document.getElementById("view-"+v); if(el) el.hidden=(v!==name);
   });
   document.querySelectorAll("#tabs .tab").forEach(t=>t.classList.toggle("active",t.dataset.view===name));
   activeView=name;
   if(name==="alerts" && !alertsBuilt){ buildAlerts(); alertsBuilt=true; }
+  if(name==="map" && !mapReady){ initMap(); }
   if(name==="explorer" && !explorerBuilt){ buildExplorer(); explorerBuilt=true; }
   if(name==="scorer" && !scorerReady){ initScorer(); }
 }
@@ -704,6 +724,96 @@ function drawAlertTimeline(container, points){
     c.addEventListener("mouseleave",hideTT); svg.appendChild(c);
   });
   container.innerHTML="";container.appendChild(svg);
+}
+
+// ---------------- geographic map (choropleth) ----------------
+let mapReady=false, mapMetric="n";
+const MAP_METRICS={
+  n:{label:"Complaint volume", fmt:v=>fmtInt(Math.round(v)), log:true, minN:1},
+  escalation:{label:"Escalation rate", fmt:v=>fmtPct(v), log:false, minN:80},
+  churn:{label:"Churn-risk share", fmt:v=>fmtPct(v), log:false, minN:80},
+  negative:{label:"Negative sentiment", fmt:v=>fmtPct(v), log:false, minN:80},
+};
+const RAMP=["#cde2fb","#9ec5f4","#5598e7","#2a78d6","#184f95","#0d366b"];
+function lerpHex(a,b,t){const A=parseInt(a.slice(1),16),B=parseInt(b.slice(1),16);
+  const r=Math.round((A>>16)+((B>>16)-(A>>16))*t),g=Math.round(((A>>8)&255)+(((B>>8)&255)-((A>>8)&255))*t),
+    bl=Math.round((A&255)+((B&255)-(A&255))*t);return `rgb(${r},${g},${bl})`;}
+function rampColor(t){t=Math.max(0,Math.min(1,t));const n=RAMP.length-1,seg=t*n,i=Math.min(n-1,Math.floor(seg));return lerpHex(RAMP[i],RAMP[i+1],seg-i);}
+
+async function initMap(){
+  const v=document.getElementById("view-map");
+  v.innerHTML=`<div class="card"><p class="cap">Loading US map…</p></div>`;
+  try{ if(!window.US_STATES_GEO) await loadScript("states_geo.js"); }
+  catch(e){ v.innerHTML=`<div class="card missing">Map geometry not found. Run <code>python -m src.geo_export</code>.</div>`; return; }
+  mapReady=true; buildMap();
+}
+function buildMap(){
+  document.getElementById("view-map").innerHTML=`
+    <div class="card">
+      <div class="map-head">
+        <div>
+          <h3 style="margin:0">Complaints by state</h3>
+          <p class="cap" style="margin:2px 0 0">Choropleth of Amex complaints across the US (Albers projection, AK/HI inset). Hover a state for detail.</p>
+        </div>
+        <div class="segmented" id="mapMetric">
+          ${Object.entries(MAP_METRICS).map(([k,m])=>`<button data-m="${k}" class="${k===mapMetric?'on':''}">${m.label}</button>`).join("")}
+        </div>
+      </div>
+      <div class="map-wrap">
+        <div id="mapSvg"></div>
+        <div class="map-side">
+          <div class="k" style="margin-bottom:6px">Legend</div>
+          <div id="mapLegend"></div>
+          <div class="k" style="margin:14px 0 6px">Top states</div>
+          <div id="mapTop"></div>
+        </div>
+      </div>
+    </div>`;
+  document.querySelectorAll("#mapMetric button").forEach(b=>b.onclick=()=>{
+    mapMetric=b.dataset.m;
+    document.querySelectorAll("#mapMetric button").forEach(x=>x.classList.toggle("on",x===b));
+    drawMap();
+  });
+  drawMap();
+}
+function drawMap(){
+  const geo=window.US_STATES_GEO, sm=D.states_metrics||{}, cfg=MAP_METRICS[mapMetric];
+  const codes=Object.keys(geo.paths);
+  const domain=codes.map(c=>sm[c]).filter(m=>m && m.n>=cfg.minN).map(m=>m[mapMetric]);
+  const mn=Math.min(...domain), mx=Math.max(...domain);
+  const tOf=v=>{ if(cfg.log){const a=Math.log(mn+1),b=Math.log(mx+1);return (Math.log(v+1)-a)/((b-a)||1);}
+    return (v-mn)/((mx-mn)||1); };
+  const host=document.getElementById("mapSvg"), W=host.clientWidth||680;
+  const vb=geo.viewBox.split(" ").map(Number), H=Math.round(W*(vb[3]/vb[2]));
+  const svg=el("svg",{viewBox:geo.viewBox,height:H,style:"width:100%;height:auto"});
+  codes.forEach(code=>{
+    const m=sm[code];
+    const p=el("path",{d:geo.paths[code], stroke:css("--surface"), "stroke-width":0.7,
+      fill: m? rampColor(tOf(m[mapMetric])) : "var(--grid)", style:"cursor:pointer;transition:opacity .1s"});
+    p.addEventListener("mousemove",e=>{ p.setAttribute("stroke",css("--ink")); p.setAttribute("stroke-width","1.4");
+      const detail = m ? `${cfg.label}: <b>${cfg.fmt(m[mapMetric])}</b><br><span class="r">${fmtInt(m.n)} complaints</span>`
+                       : '<span class="r">no complaints</span>';
+      showTT(`<b>${code}</b><br>${detail}`,e); });
+    p.addEventListener("mouseleave",()=>{ p.setAttribute("stroke",css("--surface")); p.setAttribute("stroke-width","0.7"); hideTT(); });
+    svg.appendChild(p);
+  });
+  host.innerHTML=""; host.appendChild(svg);
+
+  // legend gradient
+  const grad=RAMP.map((c,i)=>`${c} ${Math.round(i/(RAMP.length-1)*100)}%`).join(",");
+  document.getElementById("mapLegend").innerHTML=`
+    <div class="legendbar" style="background:linear-gradient(90deg,${grad})"></div>
+    <div class="legendlabels"><span>${cfg.fmt(mn)}</span><span>${cfg.fmt(mx)}</span></div>
+    <div class="cap" style="margin-top:4px">${mapMetric==='n'?'log scale':'states with ≥'+cfg.minN+' complaints set the scale'}</div>`;
+
+  // top states
+  const top=codes.map(c=>({c,m:sm[c]})).filter(x=>x.m && x.m.n>=cfg.minN)
+    .sort((a,b)=>b.m[mapMetric]-a.m[mapMetric]).slice(0,10);
+  const tmax=top.length?top[0].m[mapMetric]:1;
+  document.getElementById("mapTop").innerHTML=top.map(x=>`
+    <div class="toprow"><span class="tcode">${x.c}</span>
+      <span class="tbar"><span style="width:${Math.round(x.m[mapMetric]/tmax*100)}%;background:${rampColor(tOf(x.m[mapMetric]))}"></span></span>
+      <span class="tval">${cfg.fmt(x.m[mapMetric])}</span></div>`).join("");
 }
 
 // ---------------- complaint explorer ----------------

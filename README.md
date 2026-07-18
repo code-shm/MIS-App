@@ -27,6 +27,9 @@ parallel Power BI model) and a BigQuery-ready data layer.
   segments: a "needs attention" read on the latest complete month, product/issue
   risk hotspots (escalation/churn vs. the Amex average), notable historical
   spikes, and an anomaly timeline. A tab badge shows the open critical/serious count.
+- **Geographic map** — interactive US choropleth (real Albers-projected state
+  geometry, AK/HI inset) shaded by complaint volume, escalation rate, churn-risk,
+  or negative sentiment; metric switcher, legend, hover, and a top-states ranking.
 - **Complaint Explorer** — searchable, sortable, filterable table of the
   highest-risk individual complaints (escalation %, churn-risk, sentiment); click
   a row to read the narrative or send it straight to the scorer.

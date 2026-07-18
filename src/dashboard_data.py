@@ -319,10 +319,32 @@ def build(scored: pd.DataFrame, top_terms: list[tuple[str, float]] | None = None
         "snippet": (str(r["narrative"])[:240] + ("…" if len(str(r["narrative"])) > 240 else "")),
     } for _, r in exp.iterrows()]
 
+    # -- Per-state metrics (for the choropleth) ---------------------------
+    sm = df.groupby("state").agg(
+        n=("complaint_id", "size"),
+        escalation=("is_escalated", "mean"),
+        churn=("churn_high_risk", "mean"),
+        sentiment=("sent_compound", "mean"),
+    )
+    neg = df[df["has_narrative"] == 1].groupby("state")["is_negative"].mean()
+    states_metrics = {}
+    for code, r in sm.iterrows():
+        c = str(code).strip().upper()
+        if len(c) != 2 or not c.isalpha():
+            continue
+        states_metrics[c] = {
+            "n": int(r["n"]),
+            "escalation": round(float(r["escalation"]), 4),
+            "churn": round(float(r["churn"]), 4),
+            "sentiment": round(float(r["sentiment"]), 4),
+            "negative": round(float(neg.get(code, 0.0)), 4),
+        }
+
     payload = {
         "generated_from": "CFPB Consumer Complaint Database",
         "company": config.TARGET_COMPANY,
         "kpis": kpis,
+        "states_metrics": states_metrics,
         "monthly": monthly,
         "breakdowns": breakdowns,
         "risk": risk,

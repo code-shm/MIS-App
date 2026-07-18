@@ -24,12 +24,10 @@ def main() -> int:
     inline = f"<script>window.DASHBOARD_DATA = {data};</script>"
     # Inline the scorer assets + code so the Live Scorer works with no server
     # (lazy loadScript() over file:// is blocked; pre-defining the globals skips it).
-    scorer_assets = (ROOT / "dashboards" / "html" / "scorer_assets.js")
-    scorer_code = (ROOT / "dashboards" / "html" / "scorer.js")
-    if scorer_assets.exists():
-        inline += f"\n<script>{scorer_assets.read_text(encoding='utf-8')}</script>"
-    if scorer_code.exists():
-        inline += f"\n<script>{scorer_code.read_text(encoding='utf-8')}</script>"
+    for name in ("states_geo.js", "scorer_assets.js", "scorer.js"):
+        p = ROOT / "dashboards" / "html" / name
+        if p.exists():
+            inline += f"\n<script>{p.read_text(encoding='utf-8')}</script>"
     html = html.replace('<script src="data.js"></script>', inline)
     OUT.write_text(html, encoding="utf-8")
     print(f"Wrote {OUT.relative_to(ROOT)} ({OUT.stat().st_size/1024:,.0f} KB)")

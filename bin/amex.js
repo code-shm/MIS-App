@@ -32,6 +32,8 @@ const COMMANDS = {
   report:     { mod: "src.report" },
   bigquery:   { mod: "src.bigquery_upload", args: ["--emit-ddl-only"] },
   ingest:     { mod: "src.ingest", args: ["--amex"] },
+  scorer:     { mod: "src.browser_export" },
+  geo:        { mod: "src.geo_export" },
   // script-based helpers
   powerbi:    { script: "scripts/export_powerbi.py" },
   standalone: { script: "scripts/build_standalone.py" },

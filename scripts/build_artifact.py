@@ -26,7 +26,7 @@ def main() -> int:
     style = re.search(r"<style>.*?</style>", html, re.S).group(0)
     body = re.search(r"<body>(.*?)</body>", html, re.S).group(1)
     inline = f"<script>window.DASHBOARD_DATA = {data};</script>"
-    for name in ("scorer_assets.js", "scorer.js"):
+    for name in ("states_geo.js", "scorer_assets.js", "scorer.js"):
         p = HTML.parent / name
         if p.exists():
             inline += f"\n<script>{p.read_text(encoding='utf-8')}</script>"
