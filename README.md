@@ -30,6 +30,8 @@ parallel Power BI model) and a BigQuery-ready data layer.
 - **Geographic map** — interactive US choropleth (real Albers-projected state
   geometry, AK/HI inset) shaded by complaint volume, escalation rate, churn-risk,
   or negative sentiment; metric switcher, legend, hover, and a top-states ranking.
+  **Click any state (or a top-states row) to jump into the Explorer filtered to
+  that state** — the list rows make small states easy to reach on any device.
 - **Complaint Explorer** — searchable, sortable, filterable table of the
   highest-risk individual complaints (escalation %, churn-risk, sentiment); click
   a row to read the narrative or send it straight to the scorer.

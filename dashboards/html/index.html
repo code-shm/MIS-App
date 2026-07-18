@@ -144,7 +144,12 @@
   @media(max-width:760px){.map-wrap{grid-template-columns:1fr}}
   .legendbar{height:12px; border-radius:6px}
   .legendlabels{display:flex; justify-content:space-between; font-size:11.5px; color:var(--ink-2); margin-top:4px; font-variant-numeric:tabular-nums}
-  .toprow{display:flex; align-items:center; gap:8px; font-size:12px; margin-bottom:5px}
+  .toprow{display:flex; align-items:center; gap:8px; font-size:12px; margin-bottom:5px; cursor:pointer; padding:2px 4px; border-radius:6px; margin-left:-4px; margin-right:-4px}
+  .toprow:hover{background:color-mix(in srgb, var(--brand) 8%, transparent)}
+  .statebanner{display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:12.5px; color:var(--ink-2);
+    background:color-mix(in srgb,var(--brand) 8%,transparent); border:1px solid color-mix(in srgb,var(--brand) 25%,var(--border));
+    border-radius:9px; padding:9px 12px; margin:4px 0 8px}
+  .statebanner b{color:var(--ink)}
   .tcode{width:26px; font-weight:650; color:var(--ink)}
   .tbar{flex:1; height:8px; background:var(--grid); border-radius:4px; overflow:hidden}
   .tbar>span{display:block; height:100%; border-radius:4px}
@@ -753,7 +758,7 @@ function buildMap(){
       <div class="map-head">
         <div>
           <h3 style="margin:0">Complaints by state</h3>
-          <p class="cap" style="margin:2px 0 0">Choropleth of Amex complaints across the US (Albers projection, AK/HI inset). Hover a state for detail.</p>
+          <p class="cap" style="margin:2px 0 0">Choropleth of Amex complaints across the US (Albers projection, AK/HI inset). Hover for detail; <b>click a state — or a Top-states row — to explore its complaints</b>.</p>
         </div>
         <div class="segmented" id="mapMetric">
           ${Object.entries(MAP_METRICS).map(([k,m])=>`<button data-m="${k}" class="${k===mapMetric?'on':''}">${m.label}</button>`).join("")}
@@ -795,6 +800,7 @@ function drawMap(){
                        : '<span class="r">no complaints</span>';
       showTT(`<b>${code}</b><br>${detail}`,e); });
     p.addEventListener("mouseleave",()=>{ p.setAttribute("stroke",css("--surface")); p.setAttribute("stroke-width","0.7"); hideTT(); });
+    if(m) p.addEventListener("click",()=>openExplorerForState(code));
     svg.appendChild(p);
   });
   host.innerHTML=""; host.appendChild(svg);
@@ -811,15 +817,17 @@ function drawMap(){
     .sort((a,b)=>b.m[mapMetric]-a.m[mapMetric]).slice(0,10);
   const tmax=top.length?top[0].m[mapMetric]:1;
   document.getElementById("mapTop").innerHTML=top.map(x=>`
-    <div class="toprow"><span class="tcode">${x.c}</span>
+    <div class="toprow" data-code="${x.c}" title="Explore ${x.c} complaints"><span class="tcode">${x.c}</span>
       <span class="tbar"><span style="width:${Math.round(x.m[mapMetric]/tmax*100)}%;background:${rampColor(tOf(x.m[mapMetric]))}"></span></span>
       <span class="tval">${cfg.fmt(x.m[mapMetric])}</span></div>`).join("");
+  document.querySelectorAll("#mapTop .toprow").forEach(r=>r.onclick=()=>openExplorerForState(r.dataset.code));
 }
 
 // ---------------- complaint explorer ----------------
 function buildExplorer(){
   const rows=D.complaints||[];
   const products=[...new Set(rows.map(r=>r.product))].sort();
+  const states=[...new Set(rows.map(r=>r.state))].filter(s=>/^[A-Z]{2}$/.test(s)).sort();
   document.getElementById("view-explorer").innerHTML=`
     <div class="card">
       <h3>Complaint explorer</h3>
@@ -828,6 +836,7 @@ function buildExplorer(){
       <div class="filters">
         <input id="expSearch" type="search" placeholder="Search narrative, issue, state…">
         <select id="expProduct"><option value="">All products</option>${products.map(p=>`<option>${p}</option>`).join("")}</select>
+        <select id="expState"><option value="">All states</option>${states.map(s=>`<option>${s}</option>`).join("")}</select>
         <select id="expSent"><option value="">All sentiment</option><option>Negative</option><option>Neutral</option><option>Positive</option></select>
         <select id="expSort">
           <option value="risk">Sort: highest risk</option>
@@ -838,33 +847,64 @@ function buildExplorer(){
         </select>
         <label class="chk"><input type="checkbox" id="expEsc"> Escalated only</label>
       </div>
+      <div id="expBanner"></div>
       <div id="expCount" class="cap"></div>
       <div style="overflow-x:auto"><table class="explorer" id="expTable"></table></div>
     </div>`;
-  ["expSearch","expProduct","expSent","expSort","expEsc"].forEach(id=>{
+  ["expSearch","expProduct","expState","expSent","expSort","expEsc"].forEach(id=>{
     const el=document.getElementById(id);
     el.addEventListener("input",renderExplorerTable); el.addEventListener("change",renderExplorerTable);
   });
   renderExplorerTable();
 }
+// Open the Explorer filtered to one state (used by the map + top-states list).
+function openExplorerForState(code){
+  if(!explorerBuilt){ buildExplorer(); explorerBuilt=true; }
+  switchTab("explorer");
+  const sel=document.getElementById("expState");
+  if(sel){
+    if(![...sel.options].some(o=>o.value===code)){
+      const o=document.createElement("option"); o.value=code; o.textContent=code; sel.appendChild(o);
+    }
+    sel.value=code;
+  }
+  renderExplorerTable();
+  document.getElementById("view-explorer").scrollIntoView({behavior:"smooth",block:"start"});
+}
 function renderExplorerTable(){
   let rows=(D.complaints||[]).slice();
   const q=(document.getElementById("expSearch").value||"").toLowerCase().trim();
   const prod=document.getElementById("expProduct").value;
+  const stateF=document.getElementById("expState").value;
   const sent=document.getElementById("expSent").value;
   const sort=document.getElementById("expSort").value;
   const escOnly=document.getElementById("expEsc").checked;
   if(q) rows=rows.filter(r=>(r.snippet+" "+r.issue+" "+r.state+" "+r.product).toLowerCase().includes(q));
   if(prod) rows=rows.filter(r=>r.product===prod);
+  if(stateF) rows=rows.filter(r=>r.state===stateF);
   if(sent) rows=rows.filter(r=>r.sentiment===sent);
   if(escOnly) rows=rows.filter(r=>r.escalated===1);
+
+  // state-context banner (with the state's aggregate stats)
+  const banner=document.getElementById("expBanner");
+  if(stateF && D.states_metrics && D.states_metrics[stateF]){
+    const m=D.states_metrics[stateF];
+    banner.innerHTML=`<div class="statebanner">📍 <b>${stateF}</b> — ${fmtInt(m.n)} total complaints ·
+      escalation ${fmtPct(m.escalation)} · churn-risk ${fmtPct(m.churn)} · avg sentiment ${m.sentiment.toFixed(2)}
+      <button class="toggle small" id="expClearState">Clear ✕</button></div>`;
+    document.getElementById("expClearState").onclick=()=>{document.getElementById("expState").value="";renderExplorerTable();};
+  } else banner.innerHTML="";
   const cmp={risk:(a,b)=>Math.max(b.escalation,b.churn)-Math.max(a.escalation,a.churn),
     escalation:(a,b)=>b.escalation-a.escalation, churn:(a,b)=>b.churn-a.churn,
     date:(a,b)=>String(b.date).localeCompare(String(a.date)), compound:(a,b)=>a.compound-b.compound};
   rows.sort(cmp[sort]||cmp.risk);
   const CAP=200, view=rows.slice(0,CAP);
-  document.getElementById("expCount").textContent =
-    rows.length>CAP ? `${fmtInt(rows.length)} complaints (showing top ${CAP})` : `${fmtInt(rows.length)} complaints`;
+  const cnt=document.getElementById("expCount");
+  if(rows.length===0 && stateF){
+    cnt.textContent = `No high-risk narratives from ${stateF} in this sample (the Explorer holds the top-risk complaints with narratives). Try clearing the state filter.`;
+  } else {
+    cnt.textContent = rows.length>CAP ? `${fmtInt(rows.length)} complaints (showing top ${CAP})` : `${fmtInt(rows.length)} complaints`;
+  }
   const bar=(v,c)=>`<span class="mini"><span style="width:${Math.round(v*100)}%;background:${c}"></span></span>`;
   document.getElementById("expTable").innerHTML=
     `<thead><tr><th>Date</th><th>Product</th><th>Issue</th><th>St</th><th>Sentiment</th>
