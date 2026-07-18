@@ -50,6 +50,7 @@
     box-shadow:0 0 0 0 rgba(12,163,12,.5); animation:pulse 2.2s infinite}
   .live.busy .dot{background:var(--warn); animation:spin 1s linear infinite; box-shadow:none;
     border-radius:2px}
+  .live.static .dot{background:var(--muted); animation:none; box-shadow:none}
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(12,163,12,.45)}70%{box-shadow:0 0 0 7px rgba(12,163,12,0)}100%{box-shadow:0 0 0 0 rgba(12,163,12,0)}}
   @keyframes spin{to{transform:rotate(360deg)}}
   @media(prefers-reduced-motion:reduce){.live .dot{animation:none}}
@@ -3681,32 +3682,50 @@ function render(){
 
 // ---- controls: theme toggle + live refresh (re-bound after each render) ----
 let lastStamp = null;
+let hasAPI = false;   // true only when the live server (/api/*) is reachable
 function bindControls(){
   const themeBtn=document.getElementById("themeBtn");
   if(themeBtn) themeBtn.onclick=()=>{
     const cur=document.documentElement.getAttribute("data-theme")==="dark"?"light":"dark";
     document.documentElement.setAttribute("data-theme",cur); render(); bindControls();
   };
-  const rb=document.getElementById("refreshBtn");
-  if(rb && SERVED){ rb.hidden=false; rb.onclick=triggerRefresh; }
-  const ls=document.getElementById("liveStatus");
-  if(ls && SERVED) ls.hidden=false;
-  const pb=document.getElementById("pdfBtn");
-  if(pb) pb.onclick=downloadPDF;
+  const rb=document.getElementById("refreshBtn"); if(rb) rb.onclick=triggerRefresh;
+  const pb=document.getElementById("pdfBtn"); if(pb) pb.onclick=downloadPDF;
+  applyMode();
 }
 
-// Download the server-generated executive PDF; fall back to browser print.
+// Refresh only works against the live server; on a static host (Vercel, GitHub
+// Pages, file://) we hide it and show a "Snapshot" pill instead.
+function applyMode(){
+  const rb=document.getElementById("refreshBtn");
+  const ls=document.getElementById("liveStatus"), lt=document.getElementById("liveText");
+  if(rb) rb.hidden = !hasAPI;
+  if(ls){ ls.hidden = !SERVED; ls.classList.toggle("static", SERVED && !hasAPI); }
+  if(SERVED && !hasAPI && lt && lt.textContent==="Live"){
+    lt.textContent = D && D.kpis ? "Snapshot · "+D.kpis.date_max : "Snapshot";
+  }
+}
+
+// PDF: live server -> generate on demand; static host -> the pre-built PDF that
+// ships next to the page; file:// -> browser print.
+function downloadBlob(blob, name){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a"); a.href=url; a.download=name;
+  document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+async function staticPDForPrint(){
+  try{ const r=await fetch("amex_executive_report.pdf",{cache:"no-store"});
+    if(r.ok){ downloadBlob(await r.blob(),"amex_executive_report.pdf"); return; } }catch(e){}
+  window.print();
+}
 async function downloadPDF(){
   const pb=document.getElementById("pdfBtn");
-  if(!SERVED){ window.print(); return; }
+  if(!hasAPI){ await staticPDForPrint(); return; }
   if(pb){ pb.disabled=true; pb.textContent="⏳ Building…"; }
   try{
     const r=await fetch("/api/report.pdf"); if(!r.ok) throw new Error("report failed");
-    const blob=await r.blob(); const url=URL.createObjectURL(blob);
-    const a=document.createElement("a"); a.href=url;
-    a.download="amex_executive_report.pdf"; document.body.appendChild(a); a.click(); a.remove();
-    URL.revokeObjectURL(url);
-  }catch(e){ window.print(); }
+    downloadBlob(await r.blob(), "amex_executive_report.pdf");
+  }catch(e){ await staticPDForPrint(); }
   finally{ if(pb){ pb.disabled=false; pb.textContent="⬇ PDF"; } }
 }
 let rt; function debouncedRender(){clearTimeout(rt); rt=setTimeout(()=>{render();bindControls();},150);}
@@ -3767,7 +3786,12 @@ async function init(){
   }
   render(); bindControls();
   window.addEventListener("resize",debouncedRender);
-  if(SERVED){ await pollStatus(); setInterval(pollStatus, 12000); }
+  if(SERVED){
+    try{ const r=await fetch("/api/status",{cache:"no-store"}); hasAPI=r.ok; }
+    catch(e){ hasAPI=false; }   // static host (Vercel/Pages): no live API
+    applyMode();
+    if(hasAPI){ await pollStatus(); setInterval(pollStatus, 12000); }
+  }
 }
 init();
 </script>

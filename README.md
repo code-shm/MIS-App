@@ -187,6 +187,14 @@ feature set (enforced by an assertion in `churn_model.py`), which is why the AUC
 is a believable 0.879 rather than a leaked 1.0. The output is a calibrated
 at-risk probability that prioritises retention outreach.
 
+## Deployment
+
+The static dashboard deploys to **Vercel** in one click (`vercel.json` points at
+`dashboards/html/`); on a static host it runs in snapshot mode and stays fresh
+via a scheduled **GitHub Action** that regenerates the data and pushes. For the
+full live server (real-time Refresh button + on-demand PDF), deploy `src/serve.py`
+to Render/Railway/Fly. Full guide: [`docs/DEPLOY.md`](docs/DEPLOY.md).
+
 ## Data & attribution
 Source: [CFPB Consumer Complaint Database](https://www.consumerfinance.gov/data-research/consumer-complaints/)
 (public domain). This project is an independent analytics exercise and is **not
