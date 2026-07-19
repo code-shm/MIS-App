@@ -2226,8 +2226,8 @@ window.DASHBOARD_DATA = {
   },
   "models": {
     "escalation": {
-      "roc_auc": 0.6753772259308113,
-      "pr_auc": 0.4746800728315278,
+      "roc_auc": 0.6753786253231161,
+      "pr_auc": 0.4746777093492321,
       "n_train": 46535,
       "n_test": 11634
     },
@@ -2236,7 +2236,69 @@ window.DASHBOARD_DATA = {
       "pr_auc": 0.41117679241586147,
       "n_train": 46535,
       "n_test": 11634
-    }
+    },
+    "top_escalation_terms": [
+      {
+        "term": "louisiana",
+        "weight": 2.298
+      },
+      {
+        "term": "did apply",
+        "weight": 2.221
+      },
+      {
+        "term": "suspended",
+        "weight": 2.131
+      },
+      {
+        "term": "inquires",
+        "weight": 1.949
+      },
+      {
+        "term": "cease desist",
+        "weight": 1.834
+      },
+      {
+        "term": "promise",
+        "weight": 1.798
+      },
+      {
+        "term": "vendors",
+        "weight": 1.785
+      },
+      {
+        "term": "letter stating",
+        "weight": 1.749
+      },
+      {
+        "term": "fraudulent",
+        "weight": 1.735
+      },
+      {
+        "term": "business days",
+        "weight": 1.731
+      },
+      {
+        "term": "deceased",
+        "weight": 1.715
+      },
+      {
+        "term": "scra",
+        "weight": 1.697
+      },
+      {
+        "term": "desist",
+        "weight": 1.69
+      },
+      {
+        "term": "result",
+        "weight": 1.671
+      },
+      {
+        "term": "billed",
+        "weight": 1.654
+      }
+    ]
   },
   "industry": {
     "total_rows_processed": 17010343,
@@ -4319,7 +4381,7 @@ window.DASHBOARD_DATA = {
       "snippet": "I received an Amex Gift Card and activated it as required before it could be used. The Amex website portal ) shows a balance. I have attempted to use these funds with various online merchants such as and ( using {$1.00} less than the face v\u2026"
     },
     {
-      "id": 9464717,
+      "id": 9457806,
       "date": "2024-07-09",
       "product": "Prepaid card",
       "issue": "Trouble using the card",
@@ -4345,7 +4407,7 @@ window.DASHBOARD_DATA = {
       "snippet": "I received an Amex . This includes an email You have received an American Express from . And on there I clicked the link to validate and print the card, which loads on https : //balance.amexgiftcard.com/ # /account and shows a balance. I at\u2026"
     },
     {
-      "id": 9457806,
+      "id": 9464717,
       "date": "2024-07-09",
       "product": "Prepaid card",
       "issue": "Trouble using the card",
@@ -5392,7 +5454,7 @@ window.DASHBOARD_DATA = {
       "state": "TX",
       "sentiment": "Negative",
       "compound": -0.943,
-      "escalation": 0.928,
+      "escalation": 0.927,
       "churn": 0.114,
       "escalated": 1,
       "snippet": "I have had the American Express Serve account for many many years ... Never had any issues. Last night / /24 a transaction posted for {$34.00} that I didn't authorize and I called customer service and they said it would have to post complet\u2026"
@@ -5879,19 +5941,6 @@ window.DASHBOARD_DATA = {
       "snippet": "I have a 'digital \" prepaid American Express gift card. I have tried several large 'online ' merchants to use the card but consistently. AMEX states on their website, it can be used \" anywhere '' which is factually, 100 % wrong. Merchants, \u2026"
     },
     {
-      "id": 8481865,
-      "date": "2024-03-05",
-      "product": "Prepaid card",
-      "issue": "Trouble using the card",
-      "state": "MA",
-      "sentiment": "Negative",
-      "compound": -0.159,
-      "escalation": 0.921,
-      "churn": 0.05,
-      "escalated": 1,
-      "snippet": "I received an Amex eGift Card. This includes an email You have received an American Express eGift Card from . And on there I clicked the link to validate and print the card, which loads on XXXXaccount and shows a balance. I attempt to use t\u2026"
-    },
-    {
       "id": 15209737,
       "date": "2025-08-11",
       "product": "Debt collection",
@@ -5903,6 +5952,19 @@ window.DASHBOARD_DATA = {
       "churn": 0.398,
       "escalated": 1,
       "snippet": "DEBT VALIDATION LETTER / /2025 , Georgia, , This letter is being sent to you in response to a recent charge that was made on my credit report that I do not recognize. Be advised this is not a refusal to pay, but a notice sent pursuant to th\u2026"
+    },
+    {
+      "id": 8481865,
+      "date": "2024-03-05",
+      "product": "Prepaid card",
+      "issue": "Trouble using the card",
+      "state": "MA",
+      "sentiment": "Negative",
+      "compound": -0.159,
+      "escalation": 0.921,
+      "churn": 0.05,
+      "escalated": 1,
+      "snippet": "I received an Amex eGift Card. This includes an email You have received an American Express eGift Card from . And on there I clicked the link to validate and print the card, which loads on XXXXaccount and shows a balance. I attempt to use t\u2026"
     },
     {
       "id": 7905340,
@@ -6854,19 +6916,6 @@ window.DASHBOARD_DATA = {
       "snippet": "American Express continues to contact my workplace phone numbers that are not even mine despite me asking them repeatedly to stop doing so. I told them it is fine for them to contact me at my cellphone number but they are putting my job at \u2026"
     },
     {
-      "id": 7907723,
-      "date": "2023-11-27",
-      "product": "Prepaid card",
-      "issue": "Trouble using the card",
-      "state": "PA",
-      "sentiment": "Negative",
-      "compound": -0.66,
-      "escalation": 0.91,
-      "churn": 0.08,
-      "escalated": 1,
-      "snippet": "I have tried several times to use this American Express prepaid card online as it is an egift card. Every time I attempt to use it, payment gets rejected. Yesterday, / /2023 I attempted to purchase from through but it was rejected. I was ch\u2026"
-    },
-    {
       "id": 8068214,
       "date": "2023-12-27",
       "product": "Prepaid card",
@@ -6878,6 +6927,19 @@ window.DASHBOARD_DATA = {
       "churn": 0.083,
       "escalated": 1,
       "snippet": "I have two Amex Gift Cards that I got as a promotion when I installed my HVAC units. They both came with {$500.00} on them about a year ago. I was able to use them for a bit but everywhere I've tried lately they've been denied. I'm not tryi\u2026"
+    },
+    {
+      "id": 7907723,
+      "date": "2023-11-27",
+      "product": "Prepaid card",
+      "issue": "Trouble using the card",
+      "state": "PA",
+      "sentiment": "Negative",
+      "compound": -0.66,
+      "escalation": 0.91,
+      "churn": 0.08,
+      "escalated": 1,
+      "snippet": "I have tried several times to use this American Express prepaid card online as it is an egift card. Every time I attempt to use it, payment gets rejected. Yesterday, / /2023 I attempted to purchase from through but it was rejected. I was ch\u2026"
     },
     {
       "id": 8302561,
@@ -7959,19 +8021,6 @@ window.DASHBOARD_DATA = {
       "snippet": "I was given as a gift American Express each in the amount of ( {$1200.00} ) totaling ( {$2400.00} ). I had been saving them to use as an emergency fund. However when I try to use them anywhere, online, or in store at , , the cards are alway\u2026"
     },
     {
-      "id": 7828331,
-      "date": "2023-11-10",
-      "product": "Prepaid card",
-      "issue": "Trouble using the card",
-      "state": "LA",
-      "sentiment": "Positive",
-      "compound": 0.115,
-      "escalation": 0.901,
-      "churn": 0.064,
-      "escalated": 0,
-      "snippet": "A {$100.00} Amex prepaid gift card was purchased on / /2023 from . The gift card has been useless at over 10 merchants online. I called customer service and they only offered a phone number for Amex gift cards. I called the number multiple \u2026"
-    },
-    {
       "id": 11067310,
       "date": "2024-12-07",
       "product": "Prepaid card",
@@ -7983,6 +8032,19 @@ window.DASHBOARD_DATA = {
       "churn": 0.064,
       "escalated": 1,
       "snippet": "I have 4 separate prepaid gift cards from that amount to a total of {$700.00} that I can not seem to be able to use anywhere- The card can not be added to my online wallet, I can't use the virtual card in store and I can't add it as a payme\u2026"
+    },
+    {
+      "id": 7828331,
+      "date": "2023-11-10",
+      "product": "Prepaid card",
+      "issue": "Trouble using the card",
+      "state": "LA",
+      "sentiment": "Positive",
+      "compound": 0.115,
+      "escalation": 0.901,
+      "churn": 0.064,
+      "escalated": 0,
+      "snippet": "A {$100.00} Amex prepaid gift card was purchased on / /2023 from . The gift card has been useless at over 10 merchants online. I called customer service and they only offered a phone number for Amex gift cards. I called the number multiple \u2026"
     },
     {
       "id": 7496519,
@@ -8310,19 +8372,6 @@ window.DASHBOARD_DATA = {
       "snippet": "I tried to use my card on / /21 at restaurant for approx and card was declined, tried to use the card elsewhere and still declined. I was not able to log in to my account either. I was finally able to reach them by phone and was told my acc\u2026"
     },
     {
-      "id": 16752225,
-      "date": "2025-10-22",
-      "product": "Prepaid card",
-      "issue": "Problem getting a card or closing an account",
-      "state": "NV",
-      "sentiment": "Positive",
-      "compound": 0.758,
-      "escalation": 0.898,
-      "churn": 0.143,
-      "escalated": 1,
-      "snippet": "Amex Bluebird is closing their pre-paid debit card. The account must have a balance of in order to be closed. I would like the account to be closed because I have activated the new card that was sent, but I am unable to use it online to tra\u2026"
-    },
-    {
       "id": 6214667,
       "date": "2022-11-18",
       "product": "Credit card or prepaid card",
@@ -8334,6 +8383,19 @@ window.DASHBOARD_DATA = {
       "churn": 0.303,
       "escalated": 1,
       "snippet": "I have been a customer of American Express bluebird for over 9 yrs and today i made a transfer into the account and American Express locked my card permanently without any explanation except i would receive an email when i called to see why\u2026"
+    },
+    {
+      "id": 16752225,
+      "date": "2025-10-22",
+      "product": "Prepaid card",
+      "issue": "Problem getting a card or closing an account",
+      "state": "NV",
+      "sentiment": "Positive",
+      "compound": 0.758,
+      "escalation": 0.898,
+      "churn": 0.143,
+      "escalated": 1,
+      "snippet": "Amex Bluebird is closing their pre-paid debit card. The account must have a balance of in order to be closed. I would like the account to be closed because I have activated the new card that was sent, but I am unable to use it online to tra\u2026"
     },
     {
       "id": 8135860,
@@ -9428,19 +9490,6 @@ window.DASHBOARD_DATA = {
       "snippet": "First let me say that the Amex gift card was purchased in / / from a nearby in the city of , NC where I reside and given to us as a gift. I was holding onto the card for when my son needed clothes again and if money got tight. So I attempte\u2026"
     },
     {
-      "id": 8401382,
-      "date": "2024-02-22",
-      "product": "Prepaid card",
-      "issue": "Trouble using the card",
-      "state": "TX",
-      "sentiment": "Positive",
-      "compound": 0.781,
-      "escalation": 0.89,
-      "churn": 0.087,
-      "escalated": 1,
-      "snippet": "After lengthy and repeated conversations with the American Express reward card customer support, I was able to get a replacement card ordered for my AmEx Reward card which did not work in any physical store, nor would it work online. After \u2026"
-    },
-    {
       "id": 14021945,
       "date": "2025-06-11",
       "product": "Prepaid card",
@@ -9452,6 +9501,19 @@ window.DASHBOARD_DATA = {
       "churn": 0.149,
       "escalated": 1,
       "snippet": "/ /year> I tried to use the American Express Gift Card that I received on the website and the transactions kept being declined even though the balance was more than the transaction amount. I tried to get the to charge for less than the amou\u2026"
+    },
+    {
+      "id": 8401382,
+      "date": "2024-02-22",
+      "product": "Prepaid card",
+      "issue": "Trouble using the card",
+      "state": "TX",
+      "sentiment": "Positive",
+      "compound": 0.781,
+      "escalation": 0.89,
+      "churn": 0.087,
+      "escalated": 1,
+      "snippet": "After lengthy and repeated conversations with the American Express reward card customer support, I was able to get a replacement card ordered for my AmEx Reward card which did not work in any physical store, nor would it work online. After \u2026"
     },
     {
       "id": 9690990,
@@ -9766,19 +9828,6 @@ window.DASHBOARD_DATA = {
       "snippet": "I have had an account with Bluebird American Express for many years ( atleast 5 plus ). I originally opened this account when I lived in and my name was I have married and moved to and my married name is . I updated my information with blue\u2026"
     },
     {
-      "id": 3575863,
-      "date": "2020-03-22",
-      "product": "Credit card or prepaid card",
-      "issue": "Problem with a purchase shown on your statement",
-      "state": "LA",
-      "sentiment": "Positive",
-      "compound": 0.653,
-      "escalation": 0.888,
-      "churn": 0.408,
-      "escalated": 1,
-      "snippet": "On / / I paid {$87.00} to overnight a package to a address. The package was scheduled for delivery on / / . On / / at I called to inquire where the package was for the package had not been delivered. stated a delivery attempt was made but n\u2026"
-    },
-    {
       "id": 8152289,
       "date": "2024-01-11",
       "product": "Prepaid card",
@@ -9790,6 +9839,19 @@ window.DASHBOARD_DATA = {
       "churn": 0.134,
       "escalated": 1,
       "snippet": "I have a Bluebird Prepaid Debit Card by American Express. I purchased this prepaid card from over 10 years ago. Since about , I have had more issues accessing my account on the website and app. My password stopped working and I am unable to\u2026"
+    },
+    {
+      "id": 3575863,
+      "date": "2020-03-22",
+      "product": "Credit card or prepaid card",
+      "issue": "Problem with a purchase shown on your statement",
+      "state": "LA",
+      "sentiment": "Positive",
+      "compound": 0.653,
+      "escalation": 0.888,
+      "churn": 0.408,
+      "escalated": 1,
+      "snippet": "On / / I paid {$87.00} to overnight a package to a address. The package was scheduled for delivery on / / . On / / at I called to inquire where the package was for the package had not been delivered. stated a delivery attempt was made but n\u2026"
     },
     {
       "id": 7821280,
@@ -9857,19 +9919,6 @@ window.DASHBOARD_DATA = {
       "snippet": "I got an American express gift card for tried to use it online at several places, , ect nothing works always declined by bank ( American Express I assume ) so the card is useless wondering if they can just send a check have spent several hr\u2026"
     },
     {
-      "id": 2380585,
-      "date": "2017-03-09",
-      "product": "Credit card",
-      "issue": "Customer service / Customer relations",
-      "state": "FL",
-      "sentiment": "Negative",
-      "compound": -0.642,
-      "escalation": 0.888,
-      "churn": 0.255,
-      "escalated": 1,
-      "snippet": "On , I requested a refund check for an overpayment from American Express. I was told it would take 7-10 days to get to me, which was acceptable. On , I still did not have my check and it was outside of the timeframe I was promised, so I cal\u2026"
-    },
-    {
       "id": 13656657,
       "date": "2025-05-22",
       "product": "Prepaid card",
@@ -9881,6 +9930,19 @@ window.DASHBOARD_DATA = {
       "churn": 0.096,
       "escalated": 0,
       "snippet": "on approximately / / i attempted to make a purchase on with an amex business gift card. the payment declined. I checked the gift card balance on Amex 's website and confirmed that the card was valid and had the required available balance ( \u2026"
+    },
+    {
+      "id": 2380585,
+      "date": "2017-03-09",
+      "product": "Credit card",
+      "issue": "Customer service / Customer relations",
+      "state": "FL",
+      "sentiment": "Negative",
+      "compound": -0.642,
+      "escalation": 0.888,
+      "churn": 0.255,
+      "escalated": 1,
+      "snippet": "On , I requested a refund check for an overpayment from American Express. I was told it would take 7-10 days to get to me, which was acceptable. On , I still did not have my check and it was outside of the timeframe I was promised, so I cal\u2026"
     },
     {
       "id": 8027869,
@@ -10611,19 +10673,6 @@ window.DASHBOARD_DATA = {
       "snippet": "I received a {$10.00} American Express gift card as a reward from my apartment complexs reward program. I attempted to use the card at a of online stores, and it was always declined, even though the items I was attempting to buy were much l\u2026"
     },
     {
-      "id": 14179831,
-      "date": "2025-06-19",
-      "product": "Credit card",
-      "issue": "Problem with a purchase shown on your statement",
-      "state": "FL",
-      "sentiment": "Positive",
-      "compound": 0.979,
-      "escalation": 0.883,
-      "churn": 0.465,
-      "escalated": 1,
-      "snippet": "Subject : Double Charge for Cancelled Request for Assistance Dear Consumer Financial Protection Bureau, I am writing to report a billing issue involving and my American Express account. On Saturday, / /year>2025, I contacted to request that\u2026"
-    },
-    {
       "id": 9224435,
       "date": "2024-06-10",
       "product": "Prepaid card",
@@ -10635,6 +10684,19 @@ window.DASHBOARD_DATA = {
       "churn": 0.085,
       "escalated": 1,
       "snippet": "I have attempted to used both my Amex gift cards and the merchant notified me that the transactions were declined by my bank. I have two Amex gift cards that are for {$2500.00} each. The Amex rep told me that these can only be used in perso\u2026"
+    },
+    {
+      "id": 14179831,
+      "date": "2025-06-19",
+      "product": "Credit card",
+      "issue": "Problem with a purchase shown on your statement",
+      "state": "FL",
+      "sentiment": "Positive",
+      "compound": 0.979,
+      "escalation": 0.883,
+      "churn": 0.465,
+      "escalated": 1,
+      "snippet": "Subject : Double Charge for Cancelled Request for Assistance Dear Consumer Financial Protection Bureau, I am writing to report a billing issue involving and my American Express account. On Saturday, / /year>2025, I contacted to request that\u2026"
     },
     {
       "id": 14618687,
@@ -11281,7 +11343,7 @@ window.DASHBOARD_DATA = {
       "state": "TN",
       "sentiment": "Positive",
       "compound": 0.421,
-      "escalation": 0.88,
+      "escalation": 0.879,
       "churn": 0.267,
       "escalated": 1,
       "snippet": "I have been trying to reset my password to access my account for 2 weeks now. I am unable to reach American Express Bluebird on the phone. When I call it says my social security number is not found then the call ends. I have tried to reques\u2026"
@@ -11736,7 +11798,7 @@ window.DASHBOARD_DATA = {
       "state": "PA",
       "sentiment": "Positive",
       "compound": 0.974,
-      "escalation": 0.877,
+      "escalation": 0.878,
       "churn": 0.093,
       "escalated": 1,
       "snippet": "On / /year>, I was unable to use my gift card on a reputable retailer 's website because there is no Name assigned to the card. I logged into the gift card website to check the card info, but there was nothing about the Name on the card. I \u2026"
@@ -12184,19 +12246,6 @@ window.DASHBOARD_DATA = {
       "snippet": "On / /2024, a family member of mine purchased an Amex prepaid gift card for {$100.00}. This gift card included a 15 digit card code, an expiration date, a CVV, and a serial number on the back. On the next day ( / /2024 ) I tried to make a p\u2026"
     },
     {
-      "id": 7563026,
-      "date": "2023-09-17",
-      "product": "Prepaid card",
-      "issue": "Trouble using the card",
-      "state": "TX",
-      "sentiment": "Positive",
-      "compound": 0.153,
-      "escalation": 0.875,
-      "churn": 0.092,
-      "escalated": 1,
-      "snippet": "On / /2023 I purchased two American Express cards to put money on for my teenagers allowance. They tried to make a purchase at but it was declined. They tried to pay a bill at and it was declined again. I contacted American Express, confirm\u2026"
-    },
-    {
       "id": 9211917,
       "date": "2024-06-10",
       "product": "Prepaid card",
@@ -12208,6 +12257,19 @@ window.DASHBOARD_DATA = {
       "churn": 0.066,
       "escalated": 1,
       "snippet": "They advised to keep trying different places. Amex gift card with a large balance and has been declined at many places."
+    },
+    {
+      "id": 7563026,
+      "date": "2023-09-17",
+      "product": "Prepaid card",
+      "issue": "Trouble using the card",
+      "state": "TX",
+      "sentiment": "Positive",
+      "compound": 0.153,
+      "escalation": 0.875,
+      "churn": 0.092,
+      "escalated": 1,
+      "snippet": "On / /2023 I purchased two American Express cards to put money on for my teenagers allowance. They tried to make a purchase at but it was declined. They tried to pay a bill at and it was declined again. I contacted American Express, confirm\u2026"
     },
     {
       "id": 8260956,
@@ -12275,19 +12337,6 @@ window.DASHBOARD_DATA = {
       "snippet": "On / / I added {$160.00} to my bluebird account and it was approved. That same evening I attempted to log in to my account and was unable to. I did attempt several times thinking I may have forgotten my password. I used the link on the log \u2026"
     },
     {
-      "id": 7758474,
-      "date": "2023-10-25",
-      "product": "Prepaid card",
-      "issue": "Trouble using the card",
-      "state": "FL",
-      "sentiment": "Positive",
-      "compound": 0.238,
-      "escalation": 0.874,
-      "churn": 0.077,
-      "escalated": 1,
-      "snippet": "I received an American Express gift card for . I tried to use it online for a purchase of and it was declined. I was able to use it after a few tries at different online vendors to add $ to my account, but after that transaction, the card i\u2026"
-    },
-    {
       "id": 11601129,
       "date": "2025-01-21",
       "product": "Prepaid card",
@@ -12299,6 +12348,19 @@ window.DASHBOARD_DATA = {
       "churn": 0.087,
       "escalated": 0,
       "snippet": "On / / , I received an American Express gift card from work for {$100.00}. Amex states that when you use the card, it must be less than {$100.00}, which means you would have to find a transaction that is exactly {$100.00} in order to use th\u2026"
+    },
+    {
+      "id": 7758474,
+      "date": "2023-10-25",
+      "product": "Prepaid card",
+      "issue": "Trouble using the card",
+      "state": "FL",
+      "sentiment": "Positive",
+      "compound": 0.238,
+      "escalation": 0.874,
+      "churn": 0.077,
+      "escalated": 1,
+      "snippet": "I received an American Express gift card for . I tried to use it online for a purchase of and it was declined. I was able to use it after a few tries at different online vendors to add $ to my account, but after that transaction, the card i\u2026"
     },
     {
       "id": 11230926,
@@ -12587,19 +12649,6 @@ window.DASHBOARD_DATA = {
       "snippet": "I've tried using the card at several stores and locations with no success. This is an {$25.00} AMEX gift card, I have and neither work."
     },
     {
-      "id": 11098108,
-      "date": "2024-12-10",
-      "product": "Prepaid card",
-      "issue": "Trouble using the card",
-      "state": "WA",
-      "sentiment": "Positive",
-      "compound": 0.877,
-      "escalation": 0.873,
-      "churn": 0.172,
-      "escalated": 1,
-      "snippet": "I purchased gift cards from each worth {$300.00} ( totally {$1200.00} ) on / /year>. With those, I tried to make a bill payment of {$30.00} at on / /year>, but the payment attempts got declined. Multiple payments attempts didn't work out as\u2026"
-    },
-    {
       "id": 9471155,
       "date": "2024-07-10",
       "product": "Prepaid card",
@@ -12611,6 +12660,19 @@ window.DASHBOARD_DATA = {
       "churn": 0.066,
       "escalated": 1,
       "snippet": "On / /year> I purchased a {$250.00} Amex gift card at on and in . Despite having done so with other amounts in the past, I am no longer able to reload my balance with my remaining {$6.00} Amex balance. After multiple attempts, I am still un\u2026"
+    },
+    {
+      "id": 11098108,
+      "date": "2024-12-10",
+      "product": "Prepaid card",
+      "issue": "Trouble using the card",
+      "state": "WA",
+      "sentiment": "Positive",
+      "compound": 0.877,
+      "escalation": 0.873,
+      "churn": 0.172,
+      "escalated": 1,
+      "snippet": "I purchased gift cards from each worth {$300.00} ( totally {$1200.00} ) on / /year>. With those, I tried to make a bill payment of {$30.00} at on / /year>, but the payment attempts got declined. Multiple payments attempts didn't work out as\u2026"
     },
     {
       "id": 3889589,
@@ -12665,19 +12727,6 @@ window.DASHBOARD_DATA = {
       "snippet": "On / /year>, I attempted to use an American Express gift card with a {$200.00} balance at an online retailer that accepts American Express. The transaction was declined. I contacted American Express customer service for assistance and spoke\u2026"
     },
     {
-      "id": 13989025,
-      "date": "2025-06-10",
-      "product": "Prepaid card",
-      "issue": "Trouble using the card",
-      "state": "WV",
-      "sentiment": "Positive",
-      "compound": 0.946,
-      "escalation": 0.872,
-      "churn": 0.076,
-      "escalated": 1,
-      "snippet": "I received an American Express in the amount of {$100.00}. I was able to use the card for online purchase in the amount of {$53.00} on / /year>. I have since attempted to use this card with the same vendor the first transaction was with and\u2026"
-    },
-    {
       "id": 8661327,
       "date": "2024-03-30",
       "product": "Prepaid card",
@@ -12689,6 +12738,19 @@ window.DASHBOARD_DATA = {
       "churn": 0.095,
       "escalated": 1,
       "snippet": "I was first scammed on / / into purchasing multiple Amex gift cards. Over the next days I was instructed to purchase Amex gift cards with on each of them. I found out this was a scam on / / and immediately contacted Amex and locked all the \u2026"
+    },
+    {
+      "id": 13989025,
+      "date": "2025-06-10",
+      "product": "Prepaid card",
+      "issue": "Trouble using the card",
+      "state": "WV",
+      "sentiment": "Positive",
+      "compound": 0.946,
+      "escalation": 0.872,
+      "churn": 0.076,
+      "escalated": 1,
+      "snippet": "I received an American Express in the amount of {$100.00}. I was able to use the card for online purchase in the amount of {$53.00} on / /year>. I have since attempted to use this card with the same vendor the first transaction was with and\u2026"
     },
     {
       "id": 2998141,
